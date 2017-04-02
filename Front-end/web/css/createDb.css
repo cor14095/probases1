@@ -1,0 +1,59 @@
+html{
+	height: 100%;
+	background-color: #7c8ca5;
+}
+body{
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	position: relative;
+}
+#cont{
+	margin: 0 auto;
+	width: 80%;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	left: 50%;
+	height: 100%;
+}
+form{
+	height: 60%;
+}
+textarea{
+	height: 100%;
+	width: 100%;
+	resize: none;
+}
+#title{
+	text-align: center;
+	color: white;
+	font-size: 24px;
+}
+#querys{
+	margin: 0;
+	padding-left: 50px;
+	background-color: wheat;
+	height: 40px;
+	line-height: 40px;
+	width: 96%;
+}
+#send{
+	font-size: 26px;
+	color: white;
+	background-color: wheat;
+	border-radius: 50%;
+	border: none;
+	padding: 8px 16px;
+	cursor: pointer;
+	margin-top: 20px;
+}
+#send:hover{
+	background-color: black;
+}
+.right{
+	float: right;
+}
+.clear{
+	clear: both;
+}
