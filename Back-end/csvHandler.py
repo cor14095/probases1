@@ -3,6 +3,7 @@ import json
 import random
 import os
 import re
+import itertools
 
 currentDatabase = ''
 
@@ -181,13 +182,13 @@ def checkTypes(insertInfo, metadata):
 				return False
 	return True
 
-def checkConstraints(insertInfo, metadata):
+def checkConstraints(insertInfo, metadata, tableHash):
 	#Traverse every column in the table
 	for column in metadata['tables'][insertInfo['tableName']]['columns']:
+		value = insertInfo['values'][insertInfo['columns'].index(column['columnName'])]
 		#If column is foreign key then check if it already exists in the respective table
 		if column['key'] == FOREIGN_KEY:
 			try:
-				value = insertInfo['values'][insertInfo['columns'].index(column['columnName'])]
 				if value == "NULL":
 					#It cannot be NULL
 					print("Error, column: "+column['columnName']+" cannot be NULL, as it is a foreign key.")
@@ -203,6 +204,13 @@ def checkConstraints(insertInfo, metadata):
 			except:
 				#It has to come in the insertion statement
 				print("Error, column: "+column['columnName']+" is required, as it is a foreign key.")
+				return False
+
+		#If column is primary key then check if its unique in the respective table
+		elif column['key'] == PRIMARY_KEY:
+			# print("Value: "+str(value)+" column "+column['columnName'])
+			if str(value) in tableHash[column['columnName']]:
+				print("Error, primary key "+str(value)+" already exists in column: "+column['columnName'])
 				return False
 
 	#If all the columns are good then return True
@@ -229,13 +237,14 @@ def insertRecord(insertInfo):
 		print 'Error, types dont match with tha table types.'
 		return False
 
-	#Perform constraint check
-	if(checkConstraints(insertInfo, metadata) != True):
-		return False
-
 	#Open hash file
 	tableHashFile = open('./'+currentDatabase+'/'+insertInfo['tableName']+'.hash', 'r')
 	tableHash = json.load(tableHashFile)
+
+	#Perform constraint check
+	if(checkConstraints(insertInfo, metadata, tableHash) != True):
+		return False
+
 
 	#Construct key-value pair to insert to table json file and store index in hash
 	resultingCSV = ""
@@ -332,6 +341,55 @@ def deleteRows(deleteInfo):
 
 	return True
 
+# Example call: cartesianProduct(['table1', 'table2', 'table3'])
+def cartesianProduct(tables):
+	#Open metadata file
+	metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+	metadata = json.load(metadataFile)
+
+
+	#Check existence of all tables
+	for table in tables:
+		if not (table in metadata['tables']):
+			print("Table: "+table+" doesnt exist in database: "+currentDatabase)
+			return False
+
+	#Load all tables involved
+	data = []
+	for table in tables:
+		#Open table file
+		tableFile = open('./'+currentDatabase+'/'+table+'.json', 'r')
+		jsonFile = json.load(tableFile)
+		tempData = []
+		for key, value in jsonFile.items():
+			tempData.append(value)
+		data.append(tempData)
+
+	#Generate combinations
+	cartesianProductResult = itertools.product(*data)
+
+	#Clean
+	cartesianProductResult = map((lambda x : (','.join(map(str,x)))), cartesianProductResult)
+
+	# print(cartesianProductResult)
+	# for i in cartesianProductResult:
+	# 	print(i)
+
+	#Generate metadata from cartesianProductResult
+	columns = []
+	for table in tables:
+		tempColumns = metadata['tables'][table]['columns']
+		for column in tempColumns:
+			column['originTable'] = table
+		columns = columns + tempColumns
+
+	metadataResult = {}
+	metadataResult['columns'] = columns
+
+	return metadataResult, cartesianProductResult
+
+
+
 # whereInfoExample = {'tableName': 'table1', 'filterBy': 'column2', 'filterType': 'not', 'value':'12'}
 # def whereFilter(whereInfo):
 # 	#Open table file
@@ -394,8 +452,23 @@ createTable(tableSchemaExample)
 print("Inserting into table 2")
 insertRecord({'tableName': 'table2', 'columns':['column1', 'column2'], 'values':['12-12-1212', 'Bryan Chan']})
 
+print("Inserting into table 2")
+insertRecord({'tableName': 'table2', 'columns':['column1', 'column2'], 'values':['24-24-2424', 'Alejandro Cortes']})
+
 print("Inserting into table 1")
 insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[12, '12-12-1212']})
+
+print("Inserting into table 1")
+insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[24, '12-12-1212']})
+
+print("Inserting into table 1")
+insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[36, '12-12-1212']})
+
+print("Cartesian product")
+metadataResult, cartesianProductResult = cartesianProduct(['table1', 'table2'])
+
+print(metadataResult['columns'])
+print(cartesianProductResult)
 
 # deleteRows({'tableName':'table1', 'indexes':range(0,2999,2)})
 
