@@ -141,7 +141,7 @@ updateSet: UPDATE IDX SET IDX '=' tipo (',' tipo)* (WHERE exp)? ; // verificar
 
 deleteFrom: DELETE FROM IDX (WHERE exp)? ;
 
-selectFrom: SELECT sep FROM IDX (WHERE exp (ORDER BY  exp ASC|DESC (',' exp ASC|DESC)*)? )? ;// verificar
+selectFrom: SELECT sep FROM IDX (WHERE exp (ORDER BY  exp ASC|DESC (',' exp ASC|DESC)*)? )? ;
 
 sep: '*' | IDX(',' IDX)*;
 
