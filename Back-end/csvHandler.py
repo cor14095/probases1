@@ -201,7 +201,7 @@ def checkConstraints(insertInfo, metadata, tableHash):
 					constraintTableFile = open(r'./'+currentDatabase+'/'+column['constraintTable']+'.hash', 'r')
 					constraintTable = json.load(constraintTableFile)
 					#If it isnt
-					if not (value in constraintTable[column['columnName']]):
+					if not (value in constraintTable[column['constraintColumn']]):
 						print("Error, "+str(value)+" in column "+column['columnName']+" doesnt exist in constraint table "+column['constraintTable']+" yet.")
 						return False
 			except:
@@ -237,7 +237,7 @@ def insertRecord(insertInfo):
 
 	#Perform type checks
 	if(checkTypes(insertInfo, metadata) != True):
-		print 'Error, types dont match with tha table types.'
+		print 'Error, types dont match with the table types.'
 		return False
 
 	#Open hash file
@@ -373,6 +373,7 @@ def cartesianProduct(tables):
 
 	#Clean
 	cartesianProductResult = map((lambda x : (','.join(map(str,x)))), cartesianProductResult)
+	cartesianProductResult = map((lambda x : x.split(",")), cartesianProductResult)
 
 	# print(cartesianProductResult)
 	# for i in cartesianProductResult:
@@ -391,16 +392,149 @@ def cartesianProduct(tables):
 
 	return metadataResult, cartesianProductResult
 
+'''
+{
+	'select':['column1','column2'],
+	'from':[table1],
+	'where':{
+		'operation':'OR',
+		'firstWhere':{
+			'operation':'NULL',
+			'firstWhere':{
+				'operation':'>',
+				'constraintColumn':'column1',
+				'compareTo':100
+			},
+			'secondWhere':{}
+		},
+		'secondWhere':{
+			'operation':'AND',
+			'firstWhere':{
+				'operation':'<',
+				'constraintColumn':'column1',
+				'compareTo':100
+			},
+			'secondWhere':{
+				'operation':'=',
+				'constraintColumn':'column2',
+				'compareTo':61
+			}
+		}
+	}
+}
+'''
+
+def filterOverCartesianProduct(tableSchema, tableData, operation, firstWhere, secondWhere):
+	if(operation == "NULL"):
+		resultData = []
+		#Check ambiguity
+		indexesFound = 0
+		for i in range(len(tableSchema['columns'])):
+			# print("tableSchema:\n")
+			# print(tableSchema['columns'][i]['columnName'])
+			# print("firstWhere:\n")
+			# print(firstWhere['constraintColumn'])
+			if tableSchema['columns'][i]['columnName'] == firstWhere['constraintColumn']:
+				indexesFound = indexesFound + 1
+				indexToCompare = i
+			# print("CHECKPOINT")
+
+		if(indexesFound == 0):
+			print("Error, column: "+firstWhere['constraintColumn']+" doesnt exists in the resulting cartesian product table.")
+			return False
+		elif(indexesFound > 1):
+			print("Error, reference to column: "+firstWhere['constraintColumn']+" is ambiguous in the resulting cartesian product table.")
+			return False
+
+		#Check type compatibility
+		desiredType = tableSchema['columns'][indexToCompare]['type']
+		compareTo = firstWhere['compareTo']
+
+		# try:
+		# 	if((desiredType == 'string') or (desiredType == 'date')):
+		# 		compareTo = str(compareTo)
+		# 	elif(desiredType == 'int'):
+		# 		compareTo = int(compareTo)
+		# 	elif(desiredType == 'float'):
+		# 		compareTo = float(compareTo)
+		# except:
+		# 	print("Error, "+str(compareTo)+" couldnt be casted to the type of: "+firstWhere['constraintColumn']+" ("+desiredType+")")
+		# 	return False
+
+		compareTo = str(compareTo)
+
+		#Perform filter
+		if(firstWhere['operation'] == '='):
+			for row in tableData:
+				print("Checking if "+str(row[indexToCompare])+"("+str(type(row[indexToCompare]))+")="+str(compareTo)+"("+str(type(compareTo))+")")
+				if row[indexToCompare] == compareTo:
+					resultData.append(row)
+		elif(firstWhere['operation'] == '<'):
+			for row in tableData:
+				if row[indexToCompare] < compareTo:
+					resultData.append(row)
+		elif(firstWhere['operation'] == '<='):
+			for row in tableData:
+				if row[indexToCompare] <= compareTo:
+					resultData.append(row)
+		elif(firstWhere['operation'] == '>'):
+			for row in tableData:
+				if row[indexToCompare] > compareTo:
+					resultData.append(row)
+		elif(firstWhere['operation'] == '>='):
+			for row in tableData:
+				if row[indexToCompare] >= compareTo:
+					resultData.append(row)
+		elif(firstWhere['operation'] == 'not'):
+			for row in tableData:
+				if row[indexToCompare] != compareTo:
+					resultData.append(row)
+		
+		return resultData
+
+	elif(operation == "AND"):
+		#Filter childs
+		firstWhereResults = filterOverCartesianProduct(tableSchema, tableData, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
+		secondWhereResults = filterOverCartesianProduct(tableSchema, tableData, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+
+		#AND results of childs
+		resultData = []
+
+		for result in firstWhereResults:
+			if result in secondWhereResults:
+				resultData.append(result)
+
+		return resultData
+
+	elif(operation == "OR"):
+		#Filter childs
+		firstWhereResults = filterOverCartesianProduct(tableSchema, tableData, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
+		secondWhereResults = filterOverCartesianProduct(tableSchema, tableData, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+
+		#OR results of childs
+		for result in secondWhereResults:
+			if result not in firstWhereResults:
+				firstWhereResults.append(result)
+
+		return firstWhereResults
 
 
-# whereInfoExample = {'tableName': 'table1', 'filterBy': 'column2', 'filterType': 'not', 'value':'12'}
-# def whereFilter(whereInfo):
-# 	#Open table file
-# 	tableFile = open('./'+currentDatabase+'/'+insertInfo['tableName']+'.json', 'r')
-
-# 	if(selectInfo['filterBy'] == ''):
 
 
+
+'''
+
+def select(selectInfo):
+	#Check if cartesian product is needed
+	if(len(selectInfo['from']) > 1):
+		#Perform cartesian product
+		cartesianProductSchema, cartesianProductResult = cartesianProduct(selectInfo['from'])
+
+
+	else:
+		#Continue select using the hash
+
+'''
 
 
 
@@ -441,23 +575,22 @@ def cartesianProduct(tables):
 # Testing area
 
 createDatabase('database1')
-createDatabase('database2')
 
 useDatabase('database1')
 
-tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column1', 'key':2, 'type':'date'},{'columnName':'column2', 'key':0, 'type':'string'}]}
+tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column3', 'key':2, 'type':'date'},{'columnName':'column4', 'key':0, 'type':'string'}]}
 createTable(tableSchemaExample)
 
-tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column1', 'type':'date'},{'columnName':'column2', 'key':0, 'type':'int'}]}
+tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column3', 'type':'date'},{'columnName':'column2', 'key':0, 'type':'int'}]}
 createTable(tableSchemaExample)
 
 
 
 print("Inserting into table 2")
-insertRecord({'tableName': 'table2', 'columns':['column1', 'column2'], 'values':['12-12-1212', 'Bryan Chan']})
+insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
 
 print("Inserting into table 2")
-insertRecord({'tableName': 'table2', 'columns':['column1', 'column2'], 'values':['24-24-2424', 'Alejandro Cortes']})
+insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['24-24-2424', 'Alejandro Cortes']})
 
 print("Inserting into table 1")
 insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[12, '12-12-1212']})
@@ -473,6 +606,14 @@ metadataResult, cartesianProductResult = cartesianProduct(['table1', 'table2'])
 
 print(metadataResult['columns'])
 print(cartesianProductResult)
+
+# filterResult = filterOverCartesianProduct(metadataResult, cartesianProductResult, "NULL", {'operation':'<', 'constraintColumn':'column2', 'compareTo':36}, {})
+# print(filterResult)
+
+
+filterResult = filterOverCartesianProduct(metadataResult, cartesianProductResult, "OR", {'operation':'NULL', 'firstWhere':{'operation':'<', 'constraintColumn':'column2', 'compareTo':36}, 'secondWhere':{}}, {'operation':'NULL', 'firstWhere':{'operation':'=', 'constraintColumn':'column4', 'compareTo':'Bryan Chan'}, 'secondWhere':{}})
+print(filterResult)
+
 
 # print(showDatabases())
 
