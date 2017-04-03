@@ -673,8 +673,28 @@ def select(selectInfo):
 		#Perform WHERE, row filtering
 		filterResult = filterOverSingleTable(selectInfo['from'][0], selectInfo['where']['operation'], selectInfo['where']['firstWhere'], selectInfo['where']['secondWhere'])
 
+		#Perform SELECT, column selection
+		#Open metadata file
+		metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+		metadata = json.load(metadataFile)
 
-		print(filterResult)
+		selectedColumns = []
+		for columnName in selectInfo['select']:
+			for i in range(len(metadata['tables'][selectInfo['from'][0]]['columns'])):
+				if metadata['tables'][selectInfo['from'][0]]['columns'][i]['columnName'] == columnName:
+					selectedColumns.append(i)
+
+
+		finalResult = []
+		for row in filterResult:
+			tempRow = []
+			for column in selectedColumns:
+				tempRow.append(row[column])
+			finalResult.append(tempRow)
+
+		return finalResult
+
+		print(finalResult)
 
 
 
@@ -786,7 +806,7 @@ print(select(selectInfo))
 '''
 
 selectInfo = {
-	'select':['column1','column2'],
+	'select':['column2'],
 	'from':['table1'],
 	'where':{
 		'operation':'OR',
