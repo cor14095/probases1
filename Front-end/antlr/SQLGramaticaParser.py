@@ -1,12 +1,13 @@
-# Generated from gramatica/SQLGramatica.g4 by ANTLR 4.6
+# Generated from gramatica/SQLGramatica.g4 by ANTLR 4.7
 # encoding: utf-8
 from __future__ import print_function
 from antlr4 import *
 from io import StringIO
+import sys
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write(u"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3")
+        buf.write(u"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3")
         buf.write(u"E\u01d2\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t")
         buf.write(u"\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r")
         buf.write(u"\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4")
@@ -31,21 +32,21 @@ def serializedATN():
         buf.write(u"\3\20\3\20\3\20\7\20\u00ea\n\20\f\20\16\20\u00ed\13\20")
         buf.write(u"\3\20\3\20\3\20\3\20\3\20\3\20\3\20\7\20\u00f6\n\20\f")
         buf.write(u"\20\16\20\u00f9\13\20\3\20\3\20\3\21\3\21\3\21\3\21\3")
-        buf.write(u"\22\3\22\5\22\u0103\n\22\3\23\3\23\3\23\3\23\3\23\3\23")
-        buf.write(u"\7\23\u010b\n\23\f\23\16\23\u010e\13\23\3\24\3\24\3\24")
-        buf.write(u"\3\24\3\24\3\24\7\24\u0116\n\24\f\24\16\24\u0119\13\24")
-        buf.write(u"\3\25\3\25\3\25\3\25\3\25\3\25\3\25\7\25\u0122\n\25\f")
-        buf.write(u"\25\16\25\u0125\13\25\3\26\3\26\3\26\3\26\3\26\3\26\3")
-        buf.write(u"\26\7\26\u012e\n\26\f\26\16\26\u0131\13\26\3\27\3\27")
-        buf.write(u"\3\27\3\27\3\27\3\27\5\27\u0139\n\27\3\30\3\30\3\30\3")
-        buf.write(u"\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\7\30\u0147")
-        buf.write(u"\n\30\f\30\16\30\u014a\13\30\5\30\u014c\n\30\3\31\3\31")
-        buf.write(u"\3\31\3\31\3\31\3\31\3\31\3\31\7\31\u0156\n\31\f\31\16")
-        buf.write(u"\31\u0159\13\31\5\31\u015b\n\31\3\31\3\31\3\31\3\31\3")
-        buf.write(u"\31\3\31\3\31\3\31\3\31\5\31\u0166\n\31\3\32\3\32\3\32")
-        buf.write(u"\3\32\3\33\3\33\3\33\3\34\3\34\3\34\3\34\3\34\3\35\3")
-        buf.write(u"\35\3\35\3\35\3\35\3\35\3\35\7\35\u017b\n\35\f\35\16")
-        buf.write(u"\35\u017e\13\35\3\35\3\35\3\35\3\35\3\35\3\35\7\35\u0186")
+        buf.write(u"\22\3\22\3\23\3\23\3\23\3\23\3\23\3\23\7\23\u0109\n\23")
+        buf.write(u"\f\23\16\23\u010c\13\23\3\24\3\24\3\24\3\24\3\24\3\24")
+        buf.write(u"\7\24\u0114\n\24\f\24\16\24\u0117\13\24\3\25\3\25\3\25")
+        buf.write(u"\3\25\3\25\3\25\3\25\7\25\u0120\n\25\f\25\16\25\u0123")
+        buf.write(u"\13\25\3\26\3\26\3\26\3\26\3\26\3\26\3\26\7\26\u012c")
+        buf.write(u"\n\26\f\26\16\26\u012f\13\26\3\27\3\27\3\27\3\27\3\27")
+        buf.write(u"\3\27\3\27\3\27\5\27\u0139\n\27\3\30\3\30\3\30\3\30\3")
+        buf.write(u"\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\7\30\u0147\n\30")
+        buf.write(u"\f\30\16\30\u014a\13\30\5\30\u014c\n\30\3\31\3\31\3\31")
+        buf.write(u"\3\31\3\31\3\31\3\31\3\31\7\31\u0156\n\31\f\31\16\31")
+        buf.write(u"\u0159\13\31\5\31\u015b\n\31\3\31\3\31\3\31\3\31\3\31")
+        buf.write(u"\3\31\3\31\3\31\3\31\5\31\u0166\n\31\3\32\3\32\3\32\3")
+        buf.write(u"\32\3\33\3\33\3\33\3\34\3\34\3\34\3\34\3\34\3\35\3\35")
+        buf.write(u"\3\35\3\35\3\35\3\35\3\35\7\35\u017b\n\35\f\35\16\35")
+        buf.write(u"\u017e\13\35\3\35\3\35\3\35\3\35\3\35\3\35\7\35\u0186")
         buf.write(u"\n\35\f\35\16\35\u0189\13\35\3\35\3\35\3\36\3\36\3\36")
         buf.write(u"\3\36\3\36\3\36\3\36\3\36\7\36\u0195\n\36\f\36\16\36")
         buf.write(u"\u0198\13\36\3\36\3\36\5\36\u019c\n\36\3\37\3\37\3\37")
@@ -55,13 +56,13 @@ def serializedATN():
         buf.write(u"\16!\u01c6\13!\5!\u01c8\n!\3\"\3\"\3#\3#\3$\3$\3%\3%")
         buf.write(u"\3%\2\6$&(*&\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 ")
         buf.write(u"\"$&(*,.\60\62\64\668:<>@BDFH\2\7\4\2>?AB\4\2\b\b\n\r")
-        buf.write(u"\3\2\16\17\4\2\3\3\20\20\4\2\t\t\21\22\u01ec\2N\3\2\2")
-        buf.write(u"\2\4P\3\2\2\2\6b\3\2\2\2\bj\3\2\2\2\n}\3\2\2\2\f\u0081")
+        buf.write(u"\3\2\16\17\4\2\3\3\20\20\4\2\t\t\21\22\2\u01eb\2N\3\2")
+        buf.write(u"\2\2\4P\3\2\2\2\6b\3\2\2\2\bj\3\2\2\2\n}\3\2\2\2\f\u0081")
         buf.write(u"\3\2\2\2\16\u0088\3\2\2\2\20\u008c\3\2\2\2\22\u008f\3")
         buf.write(u"\2\2\2\24\u009c\3\2\2\2\26\u00a5\3\2\2\2\30\u00a7\3\2")
         buf.write(u"\2\2\32\u00d2\3\2\2\2\34\u00d4\3\2\2\2\36\u00e2\3\2\2")
-        buf.write(u"\2 \u00fc\3\2\2\2\"\u0102\3\2\2\2$\u0104\3\2\2\2&\u010f")
-        buf.write(u"\3\2\2\2(\u011a\3\2\2\2*\u0126\3\2\2\2,\u0138\3\2\2\2")
+        buf.write(u"\2 \u00fc\3\2\2\2\"\u0100\3\2\2\2$\u0102\3\2\2\2&\u010d")
+        buf.write(u"\3\2\2\2(\u0118\3\2\2\2*\u0124\3\2\2\2,\u0138\3\2\2\2")
         buf.write(u".\u014b\3\2\2\2\60\u0165\3\2\2\2\62\u0167\3\2\2\2\64")
         buf.write(u"\u016b\3\2\2\2\66\u016e\3\2\2\28\u0173\3\2\2\2:\u018c")
         buf.write(u"\3\2\2\2<\u019d\3\2\2\2>\u01a4\3\2\2\2@\u01c7\3\2\2\2")
@@ -135,96 +136,95 @@ def serializedATN():
         buf.write(u"\u00f8\3\2\2\2\u00f8\u00fa\3\2\2\2\u00f9\u00f7\3\2\2")
         buf.write(u"\2\u00fa\u00fb\7\6\2\2\u00fb\37\3\2\2\2\u00fc\u00fd\7")
         buf.write(u">\2\2\u00fd\u00fe\7!\2\2\u00fe\u00ff\5\"\22\2\u00ff!")
-        buf.write(u"\3\2\2\2\u0100\u0103\5$\23\2\u0101\u0103\3\2\2\2\u0102")
-        buf.write(u"\u0100\3\2\2\2\u0102\u0101\3\2\2\2\u0103#\3\2\2\2\u0104")
-        buf.write(u"\u0105\b\23\1\2\u0105\u0106\5&\24\2\u0106\u010c\3\2\2")
-        buf.write(u"\2\u0107\u0108\f\3\2\2\u0108\u0109\7\'\2\2\u0109\u010b")
-        buf.write(u"\5&\24\2\u010a\u0107\3\2\2\2\u010b\u010e\3\2\2\2\u010c")
-        buf.write(u"\u010a\3\2\2\2\u010c\u010d\3\2\2\2\u010d%\3\2\2\2\u010e")
-        buf.write(u"\u010c\3\2\2\2\u010f\u0110\b\24\1\2\u0110\u0111\5(\25")
-        buf.write(u"\2\u0111\u0117\3\2\2\2\u0112\u0113\f\3\2\2\u0113\u0114")
-        buf.write(u"\7&\2\2\u0114\u0116\5(\25\2\u0115\u0112\3\2\2\2\u0116")
-        buf.write(u"\u0119\3\2\2\2\u0117\u0115\3\2\2\2\u0117\u0118\3\2\2")
-        buf.write(u"\2\u0118\'\3\2\2\2\u0119\u0117\3\2\2\2\u011a\u011b\b")
-        buf.write(u"\25\1\2\u011b\u011c\5*\26\2\u011c\u0123\3\2\2\2\u011d")
-        buf.write(u"\u011e\f\3\2\2\u011e\u011f\5D#\2\u011f\u0120\5*\26\2")
-        buf.write(u"\u0120\u0122\3\2\2\2\u0121\u011d\3\2\2\2\u0122\u0125")
-        buf.write(u"\3\2\2\2\u0123\u0121\3\2\2\2\u0123\u0124\3\2\2\2\u0124")
-        buf.write(u")\3\2\2\2\u0125\u0123\3\2\2\2\u0126\u0127\b\26\1\2\u0127")
-        buf.write(u"\u0128\5,\27\2\u0128\u012f\3\2\2\2\u0129\u012a\f\3\2")
-        buf.write(u"\2\u012a\u012b\5B\"\2\u012b\u012c\5,\27\2\u012c\u012e")
-        buf.write(u"\3\2\2\2\u012d\u0129\3\2\2\2\u012e\u0131\3\2\2\2\u012f")
-        buf.write(u"\u012d\3\2\2\2\u012f\u0130\3\2\2\2\u0130+\3\2\2\2\u0131")
-        buf.write(u"\u012f\3\2\2\2\u0132\u0139\t\2\2\2\u0133\u0134\7(\2\2")
-        buf.write(u"\u0134\u0135\7\5\2\2\u0135\u0136\5$\23\2\u0136\u0137")
-        buf.write(u"\7\6\2\2\u0137\u0139\3\2\2\2\u0138\u0132\3\2\2\2\u0138")
-        buf.write(u"\u0133\3\2\2\2\u0139-\3\2\2\2\u013a\u013b\7\26\2\2\u013b")
-        buf.write(u"\u013c\7)\2\2\u013c\u013d\7>\2\2\u013d\u013e\7\27\2\2")
-        buf.write(u"\u013e\u013f\7\31\2\2\u013f\u014c\7>\2\2\u0140\u0141")
-        buf.write(u"\7\26\2\2\u0141\u0142\7)\2\2\u0142\u0143\7>\2\2\u0143")
-        buf.write(u"\u0148\5\60\31\2\u0144\u0145\7\7\2\2\u0145\u0147\5\60")
-        buf.write(u"\31\2\u0146\u0144\3\2\2\2\u0147\u014a\3\2\2\2\u0148\u0146")
-        buf.write(u"\3\2\2\2\u0148\u0149\3\2\2\2\u0149\u014c\3\2\2\2\u014a")
-        buf.write(u"\u0148\3\2\2\2\u014b\u013a\3\2\2\2\u014b\u0140\3\2\2")
-        buf.write(u"\2\u014c/\3\2\2\2\u014d\u014e\7+\2\2\u014e\u014f\7,\2")
-        buf.write(u"\2\u014f\u0150\7>\2\2\u0150\u015a\5\26\f\2\u0151\u0152")
-        buf.write(u"\7\34\2\2\u0152\u0157\5\32\16\2\u0153\u0154\7\7\2\2\u0154")
-        buf.write(u"\u0156\5\32\16\2\u0155\u0153\3\2\2\2\u0156\u0159\3\2")
-        buf.write(u"\2\2\u0157\u0155\3\2\2\2\u0157\u0158\3\2\2\2\u0158\u015b")
-        buf.write(u"\3\2\2\2\u0159\u0157\3\2\2\2\u015a\u0151\3\2\2\2\u015a")
-        buf.write(u"\u015b\3\2\2\2\u015b\u0166\3\2\2\2\u015c\u015d\7+\2\2")
-        buf.write(u"\u015d\u015e\7\34\2\2\u015e\u0166\5\32\16\2\u015f\u0160")
-        buf.write(u"\7\30\2\2\u0160\u0161\7,\2\2\u0161\u0166\7>\2\2\u0162")
-        buf.write(u"\u0163\7\30\2\2\u0163\u0164\7\34\2\2\u0164\u0166\7>\2")
-        buf.write(u"\2\u0165\u014d\3\2\2\2\u0165\u015c\3\2\2\2\u0165\u015f")
-        buf.write(u"\3\2\2\2\u0165\u0162\3\2\2\2\u0166\61\3\2\2\2\u0167\u0168")
-        buf.write(u"\7\30\2\2\u0168\u0169\7)\2\2\u0169\u016a\7>\2\2\u016a")
-        buf.write(u"\63\3\2\2\2\u016b\u016c\7\32\2\2\u016c\u016d\7*\2\2\u016d")
-        buf.write(u"\65\3\2\2\2\u016e\u016f\7\32\2\2\u016f\u0170\7-\2\2\u0170")
-        buf.write(u"\u0171\7/\2\2\u0171\u0172\7>\2\2\u0172\67\3\2\2\2\u0173")
-        buf.write(u"\u0174\7\60\2\2\u0174\u0175\7\63\2\2\u0175\u0176\7>\2")
-        buf.write(u"\2\u0176\u0177\7\5\2\2\u0177\u017c\7>\2\2\u0178\u0179")
-        buf.write(u"\7\7\2\2\u0179\u017b\7>\2\2\u017a\u0178\3\2\2\2\u017b")
-        buf.write(u"\u017e\3\2\2\2\u017c\u017a\3\2\2\2\u017c\u017d\3\2\2")
-        buf.write(u"\2\u017d\u017f\3\2\2\2\u017e\u017c\3\2\2\2\u017f\u0180")
-        buf.write(u"\7\6\2\2\u0180\u0181\7\62\2\2\u0181\u0182\7\5\2\2\u0182")
-        buf.write(u"\u0187\5\2\2\2\u0183\u0184\7\7\2\2\u0184\u0186\5\2\2")
-        buf.write(u"\2\u0185\u0183\3\2\2\2\u0186\u0189\3\2\2\2\u0187\u0185")
-        buf.write(u"\3\2\2\2\u0187\u0188\3\2\2\2\u0188\u018a\3\2\2\2\u0189")
-        buf.write(u"\u0187\3\2\2\2\u018a\u018b\7\6\2\2\u018b9\3\2\2\2\u018c")
-        buf.write(u"\u018d\7\64\2\2\u018d\u018e\7>\2\2\u018e\u018f\7\65\2")
-        buf.write(u"\2\u018f\u0190\7>\2\2\u0190\u0191\7\b\2\2\u0191\u0196")
-        buf.write(u"\5\26\f\2\u0192\u0193\7\7\2\2\u0193\u0195\5\26\f\2\u0194")
-        buf.write(u"\u0192\3\2\2\2\u0195\u0198\3\2\2\2\u0196\u0194\3\2\2")
-        buf.write(u"\2\u0196\u0197\3\2\2\2\u0197\u019b\3\2\2\2\u0198\u0196")
-        buf.write(u"\3\2\2\2\u0199\u019a\7\66\2\2\u019a\u019c\5\"\22\2\u019b")
-        buf.write(u"\u0199\3\2\2\2\u019b\u019c\3\2\2\2\u019c;\3\2\2\2\u019d")
-        buf.write(u"\u019e\7\67\2\2\u019e\u019f\7/\2\2\u019f\u01a2\7>\2\2")
-        buf.write(u"\u01a0\u01a1\7\66\2\2\u01a1\u01a3\5\"\22\2\u01a2\u01a0")
-        buf.write(u"\3\2\2\2\u01a2\u01a3\3\2\2\2\u01a3=\3\2\2\2\u01a4\u01a5")
-        buf.write(u"\7\61\2\2\u01a5\u01a6\5@!\2\u01a6\u01a7\7/\2\2\u01a7")
-        buf.write(u"\u01bc\7>\2\2\u01a8\u01a9\7\66\2\2\u01a9\u01ba\5\"\22")
-        buf.write(u"\2\u01aa\u01ab\78\2\2\u01ab\u01ac\79\2\2\u01ac\u01ad")
-        buf.write(u"\5\"\22\2\u01ad\u01ae\7:\2\2\u01ae\u01bb\3\2\2\2\u01af")
-        buf.write(u"\u01b7\7;\2\2\u01b0\u01b1\7\7\2\2\u01b1\u01b2\5\"\22")
-        buf.write(u"\2\u01b2\u01b3\7:\2\2\u01b3\u01b6\3\2\2\2\u01b4\u01b6")
-        buf.write(u"\7;\2\2\u01b5\u01b0\3\2\2\2\u01b5\u01b4\3\2\2\2\u01b6")
-        buf.write(u"\u01b9\3\2\2\2\u01b7\u01b5\3\2\2\2\u01b7\u01b8\3\2\2")
-        buf.write(u"\2\u01b8\u01bb\3\2\2\2\u01b9\u01b7\3\2\2\2\u01ba\u01aa")
-        buf.write(u"\3\2\2\2\u01ba\u01af\3\2\2\2\u01ba\u01bb\3\2\2\2\u01bb")
-        buf.write(u"\u01bd\3\2\2\2\u01bc\u01a8\3\2\2\2\u01bc\u01bd\3\2\2")
-        buf.write(u"\2\u01bd?\3\2\2\2\u01be\u01c8\7\t\2\2\u01bf\u01c4\7>")
-        buf.write(u"\2\2\u01c0\u01c1\7\7\2\2\u01c1\u01c3\7>\2\2\u01c2\u01c0")
-        buf.write(u"\3\2\2\2\u01c3\u01c6\3\2\2\2\u01c4\u01c2\3\2\2\2\u01c4")
-        buf.write(u"\u01c5\3\2\2\2\u01c5\u01c8\3\2\2\2\u01c6\u01c4\3\2\2")
-        buf.write(u"\2\u01c7\u01be\3\2\2\2\u01c7\u01bf\3\2\2\2\u01c8A\3\2")
-        buf.write(u"\2\2\u01c9\u01ca\t\3\2\2\u01caC\3\2\2\2\u01cb\u01cc\t")
-        buf.write(u"\4\2\2\u01ccE\3\2\2\2\u01cd\u01ce\t\5\2\2\u01ceG\3\2")
-        buf.write(u"\2\2\u01cf\u01d0\t\6\2\2\u01d0I\3\2\2\2*N_bjsw{\u009c")
-        buf.write(u"\u00a5\u00b2\u00bc\u00bf\u00c8\u00cf\u00d2\u00dd\u00eb")
-        buf.write(u"\u00f7\u0102\u010c\u0117\u0123\u012f\u0138\u0148\u014b")
-        buf.write(u"\u0157\u015a\u0165\u017c\u0187\u0196\u019b\u01a2\u01b5")
-        buf.write(u"\u01b7\u01ba\u01bc\u01c4\u01c7")
+        buf.write(u"\3\2\2\2\u0100\u0101\5$\23\2\u0101#\3\2\2\2\u0102\u0103")
+        buf.write(u"\b\23\1\2\u0103\u0104\5&\24\2\u0104\u010a\3\2\2\2\u0105")
+        buf.write(u"\u0106\f\3\2\2\u0106\u0107\7\'\2\2\u0107\u0109\5&\24")
+        buf.write(u"\2\u0108\u0105\3\2\2\2\u0109\u010c\3\2\2\2\u010a\u0108")
+        buf.write(u"\3\2\2\2\u010a\u010b\3\2\2\2\u010b%\3\2\2\2\u010c\u010a")
+        buf.write(u"\3\2\2\2\u010d\u010e\b\24\1\2\u010e\u010f\5(\25\2\u010f")
+        buf.write(u"\u0115\3\2\2\2\u0110\u0111\f\3\2\2\u0111\u0112\7&\2\2")
+        buf.write(u"\u0112\u0114\5(\25\2\u0113\u0110\3\2\2\2\u0114\u0117")
+        buf.write(u"\3\2\2\2\u0115\u0113\3\2\2\2\u0115\u0116\3\2\2\2\u0116")
+        buf.write(u"\'\3\2\2\2\u0117\u0115\3\2\2\2\u0118\u0119\b\25\1\2\u0119")
+        buf.write(u"\u011a\5*\26\2\u011a\u0121\3\2\2\2\u011b\u011c\f\3\2")
+        buf.write(u"\2\u011c\u011d\5D#\2\u011d\u011e\5*\26\2\u011e\u0120")
+        buf.write(u"\3\2\2\2\u011f\u011b\3\2\2\2\u0120\u0123\3\2\2\2\u0121")
+        buf.write(u"\u011f\3\2\2\2\u0121\u0122\3\2\2\2\u0122)\3\2\2\2\u0123")
+        buf.write(u"\u0121\3\2\2\2\u0124\u0125\b\26\1\2\u0125\u0126\5,\27")
+        buf.write(u"\2\u0126\u012d\3\2\2\2\u0127\u0128\f\3\2\2\u0128\u0129")
+        buf.write(u"\5B\"\2\u0129\u012a\5,\27\2\u012a\u012c\3\2\2\2\u012b")
+        buf.write(u"\u0127\3\2\2\2\u012c\u012f\3\2\2\2\u012d\u012b\3\2\2")
+        buf.write(u"\2\u012d\u012e\3\2\2\2\u012e+\3\2\2\2\u012f\u012d\3\2")
+        buf.write(u"\2\2\u0130\u0131\7\5\2\2\u0131\u0132\t\2\2\2\u0132\u0139")
+        buf.write(u"\7\6\2\2\u0133\u0134\7(\2\2\u0134\u0135\7\5\2\2\u0135")
+        buf.write(u"\u0136\5$\23\2\u0136\u0137\7\6\2\2\u0137\u0139\3\2\2")
+        buf.write(u"\2\u0138\u0130\3\2\2\2\u0138\u0133\3\2\2\2\u0139-\3\2")
+        buf.write(u"\2\2\u013a\u013b\7\26\2\2\u013b\u013c\7)\2\2\u013c\u013d")
+        buf.write(u"\7>\2\2\u013d\u013e\7\27\2\2\u013e\u013f\7\31\2\2\u013f")
+        buf.write(u"\u014c\7>\2\2\u0140\u0141\7\26\2\2\u0141\u0142\7)\2\2")
+        buf.write(u"\u0142\u0143\7>\2\2\u0143\u0148\5\60\31\2\u0144\u0145")
+        buf.write(u"\7\7\2\2\u0145\u0147\5\60\31\2\u0146\u0144\3\2\2\2\u0147")
+        buf.write(u"\u014a\3\2\2\2\u0148\u0146\3\2\2\2\u0148\u0149\3\2\2")
+        buf.write(u"\2\u0149\u014c\3\2\2\2\u014a\u0148\3\2\2\2\u014b\u013a")
+        buf.write(u"\3\2\2\2\u014b\u0140\3\2\2\2\u014c/\3\2\2\2\u014d\u014e")
+        buf.write(u"\7+\2\2\u014e\u014f\7,\2\2\u014f\u0150\7>\2\2\u0150\u015a")
+        buf.write(u"\5\26\f\2\u0151\u0152\7\34\2\2\u0152\u0157\5\32\16\2")
+        buf.write(u"\u0153\u0154\7\7\2\2\u0154\u0156\5\32\16\2\u0155\u0153")
+        buf.write(u"\3\2\2\2\u0156\u0159\3\2\2\2\u0157\u0155\3\2\2\2\u0157")
+        buf.write(u"\u0158\3\2\2\2\u0158\u015b\3\2\2\2\u0159\u0157\3\2\2")
+        buf.write(u"\2\u015a\u0151\3\2\2\2\u015a\u015b\3\2\2\2\u015b\u0166")
+        buf.write(u"\3\2\2\2\u015c\u015d\7+\2\2\u015d\u015e\7\34\2\2\u015e")
+        buf.write(u"\u0166\5\32\16\2\u015f\u0160\7\30\2\2\u0160\u0161\7,")
+        buf.write(u"\2\2\u0161\u0166\7>\2\2\u0162\u0163\7\30\2\2\u0163\u0164")
+        buf.write(u"\7\34\2\2\u0164\u0166\7>\2\2\u0165\u014d\3\2\2\2\u0165")
+        buf.write(u"\u015c\3\2\2\2\u0165\u015f\3\2\2\2\u0165\u0162\3\2\2")
+        buf.write(u"\2\u0166\61\3\2\2\2\u0167\u0168\7\30\2\2\u0168\u0169")
+        buf.write(u"\7)\2\2\u0169\u016a\7>\2\2\u016a\63\3\2\2\2\u016b\u016c")
+        buf.write(u"\7\32\2\2\u016c\u016d\7*\2\2\u016d\65\3\2\2\2\u016e\u016f")
+        buf.write(u"\7\32\2\2\u016f\u0170\7-\2\2\u0170\u0171\7/\2\2\u0171")
+        buf.write(u"\u0172\7>\2\2\u0172\67\3\2\2\2\u0173\u0174\7\60\2\2\u0174")
+        buf.write(u"\u0175\7\63\2\2\u0175\u0176\7>\2\2\u0176\u0177\7\5\2")
+        buf.write(u"\2\u0177\u017c\7>\2\2\u0178\u0179\7\7\2\2\u0179\u017b")
+        buf.write(u"\7>\2\2\u017a\u0178\3\2\2\2\u017b\u017e\3\2\2\2\u017c")
+        buf.write(u"\u017a\3\2\2\2\u017c\u017d\3\2\2\2\u017d\u017f\3\2\2")
+        buf.write(u"\2\u017e\u017c\3\2\2\2\u017f\u0180\7\6\2\2\u0180\u0181")
+        buf.write(u"\7\62\2\2\u0181\u0182\7\5\2\2\u0182\u0187\5\2\2\2\u0183")
+        buf.write(u"\u0184\7\7\2\2\u0184\u0186\5\2\2\2\u0185\u0183\3\2\2")
+        buf.write(u"\2\u0186\u0189\3\2\2\2\u0187\u0185\3\2\2\2\u0187\u0188")
+        buf.write(u"\3\2\2\2\u0188\u018a\3\2\2\2\u0189\u0187\3\2\2\2\u018a")
+        buf.write(u"\u018b\7\6\2\2\u018b9\3\2\2\2\u018c\u018d\7\64\2\2\u018d")
+        buf.write(u"\u018e\7>\2\2\u018e\u018f\7\65\2\2\u018f\u0190\7>\2\2")
+        buf.write(u"\u0190\u0191\7\b\2\2\u0191\u0196\5\26\f\2\u0192\u0193")
+        buf.write(u"\7\7\2\2\u0193\u0195\5\26\f\2\u0194\u0192\3\2\2\2\u0195")
+        buf.write(u"\u0198\3\2\2\2\u0196\u0194\3\2\2\2\u0196\u0197\3\2\2")
+        buf.write(u"\2\u0197\u019b\3\2\2\2\u0198\u0196\3\2\2\2\u0199\u019a")
+        buf.write(u"\7\66\2\2\u019a\u019c\5\"\22\2\u019b\u0199\3\2\2\2\u019b")
+        buf.write(u"\u019c\3\2\2\2\u019c;\3\2\2\2\u019d\u019e\7\67\2\2\u019e")
+        buf.write(u"\u019f\7/\2\2\u019f\u01a2\7>\2\2\u01a0\u01a1\7\66\2\2")
+        buf.write(u"\u01a1\u01a3\5\"\22\2\u01a2\u01a0\3\2\2\2\u01a2\u01a3")
+        buf.write(u"\3\2\2\2\u01a3=\3\2\2\2\u01a4\u01a5\7\61\2\2\u01a5\u01a6")
+        buf.write(u"\5@!\2\u01a6\u01a7\7/\2\2\u01a7\u01bc\7>\2\2\u01a8\u01a9")
+        buf.write(u"\7\66\2\2\u01a9\u01ba\5\"\22\2\u01aa\u01ab\78\2\2\u01ab")
+        buf.write(u"\u01ac\79\2\2\u01ac\u01ad\5\"\22\2\u01ad\u01ae\7:\2\2")
+        buf.write(u"\u01ae\u01bb\3\2\2\2\u01af\u01b7\7;\2\2\u01b0\u01b1\7")
+        buf.write(u"\7\2\2\u01b1\u01b2\5\"\22\2\u01b2\u01b3\7:\2\2\u01b3")
+        buf.write(u"\u01b6\3\2\2\2\u01b4\u01b6\7;\2\2\u01b5\u01b0\3\2\2\2")
+        buf.write(u"\u01b5\u01b4\3\2\2\2\u01b6\u01b9\3\2\2\2\u01b7\u01b5")
+        buf.write(u"\3\2\2\2\u01b7\u01b8\3\2\2\2\u01b8\u01bb\3\2\2\2\u01b9")
+        buf.write(u"\u01b7\3\2\2\2\u01ba\u01aa\3\2\2\2\u01ba\u01af\3\2\2")
+        buf.write(u"\2\u01ba\u01bb\3\2\2\2\u01bb\u01bd\3\2\2\2\u01bc\u01a8")
+        buf.write(u"\3\2\2\2\u01bc\u01bd\3\2\2\2\u01bd?\3\2\2\2\u01be\u01c8")
+        buf.write(u"\7\t\2\2\u01bf\u01c4\7>\2\2\u01c0\u01c1\7\7\2\2\u01c1")
+        buf.write(u"\u01c3\7>\2\2\u01c2\u01c0\3\2\2\2\u01c3\u01c6\3\2\2\2")
+        buf.write(u"\u01c4\u01c2\3\2\2\2\u01c4\u01c5\3\2\2\2\u01c5\u01c8")
+        buf.write(u"\3\2\2\2\u01c6\u01c4\3\2\2\2\u01c7\u01be\3\2\2\2\u01c7")
+        buf.write(u"\u01bf\3\2\2\2\u01c8A\3\2\2\2\u01c9\u01ca\t\3\2\2\u01ca")
+        buf.write(u"C\3\2\2\2\u01cb\u01cc\t\4\2\2\u01ccE\3\2\2\2\u01cd\u01ce")
+        buf.write(u"\t\5\2\2\u01ceG\3\2\2\2\u01cf\u01d0\t\6\2\2\u01d0I\3")
+        buf.write(u"\2\2\2)N_bjsw{\u009c\u00a5\u00b2\u00bc\u00bf\u00c8\u00cf")
+        buf.write(u"\u00d2\u00dd\u00eb\u00f7\u010a\u0115\u0121\u012d\u0138")
+        buf.write(u"\u0148\u014b\u0157\u015a\u0165\u017c\u0187\u0196\u019b")
+        buf.write(u"\u01a2\u01b5\u01b7\u01ba\u01bc\u01c4\u01c7")
         return buf.getvalue()
 
 
@@ -372,9 +372,9 @@ class SQLGramaticaParser ( Parser ):
     COMMENTX=66
     DIGITX=67
 
-    def __init__(self, input):
-        super(SQLGramaticaParser, self).__init__(input)
-        self.checkVersion("4.6")
+    def __init__(self, input, output=sys.stdout):
+        super(SQLGramaticaParser, self).__init__(input, output=output)
+        self.checkVersion("4.7")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
@@ -1621,21 +1621,9 @@ class SQLGramaticaParser ( Parser ):
         localctx = SQLGramaticaParser.ExpContext(self, self._ctx, self.state)
         self.enterRule(localctx, 32, self.RULE_exp)
         try:
-            self.state = 256
-            self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,18,self._ctx)
-            if la_ == 1:
-                self.enterOuterAlt(localctx, 1)
-                self.state = 254
-                self.expression(0)
-                pass
-
-            elif la_ == 2:
-                self.enterOuterAlt(localctx, 2)
-
-                pass
-
-
+            self.enterOuterAlt(localctx, 1)
+            self.state = 254
+            self.expression(0)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1681,12 +1669,12 @@ class SQLGramaticaParser ( Parser ):
         self.enterRecursionRule(localctx, 34, self.RULE_expression, _p)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 259
+            self.state = 257
             self.andExpr(0)
             self._ctx.stop = self._input.LT(-1)
-            self.state = 266
+            self.state = 264
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,19,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,18,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     if self._parseListeners is not None:
@@ -1694,17 +1682,17 @@ class SQLGramaticaParser ( Parser ):
                     _prevctx = localctx
                     localctx = SQLGramaticaParser.ExpressionContext(self, _parentctx, _parentState)
                     self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                    self.state = 261
+                    self.state = 259
                     if not self.precpred(self._ctx, 1):
                         from antlr4.error.Errors import FailedPredicateException
                         raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
-                    self.state = 262
+                    self.state = 260
                     self.match(SQLGramaticaParser.OR)
-                    self.state = 263
+                    self.state = 261
                     self.andExpr(0) 
-                self.state = 268
+                self.state = 266
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,19,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,18,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1751,12 +1739,12 @@ class SQLGramaticaParser ( Parser ):
         self.enterRecursionRule(localctx, 36, self.RULE_andExpr, _p)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 270
+            self.state = 268
             self.eqExpr(0)
             self._ctx.stop = self._input.LT(-1)
-            self.state = 277
+            self.state = 275
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,20,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,19,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     if self._parseListeners is not None:
@@ -1764,17 +1752,17 @@ class SQLGramaticaParser ( Parser ):
                     _prevctx = localctx
                     localctx = SQLGramaticaParser.AndExprContext(self, _parentctx, _parentState)
                     self.pushNewRecursionContext(localctx, _startState, self.RULE_andExpr)
-                    self.state = 272
+                    self.state = 270
                     if not self.precpred(self._ctx, 1):
                         from antlr4.error.Errors import FailedPredicateException
                         raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
-                    self.state = 273
+                    self.state = 271
                     self.match(SQLGramaticaParser.AND)
-                    self.state = 274
+                    self.state = 272
                     self.eqExpr(0) 
-                self.state = 279
+                self.state = 277
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,20,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,19,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1822,12 +1810,12 @@ class SQLGramaticaParser ( Parser ):
         self.enterRecursionRule(localctx, 38, self.RULE_eqExpr, _p)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 281
+            self.state = 279
             self.relationExpr(0)
             self._ctx.stop = self._input.LT(-1)
-            self.state = 289
+            self.state = 287
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,21,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,20,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     if self._parseListeners is not None:
@@ -1835,17 +1823,17 @@ class SQLGramaticaParser ( Parser ):
                     _prevctx = localctx
                     localctx = SQLGramaticaParser.EqExprContext(self, _parentctx, _parentState)
                     self.pushNewRecursionContext(localctx, _startState, self.RULE_eqExpr)
-                    self.state = 283
+                    self.state = 281
                     if not self.precpred(self._ctx, 1):
                         from antlr4.error.Errors import FailedPredicateException
                         raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
-                    self.state = 284
+                    self.state = 282
                     self.eq_op()
-                    self.state = 285
+                    self.state = 283
                     self.relationExpr(0) 
-                self.state = 291
+                self.state = 289
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,21,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,20,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1893,12 +1881,12 @@ class SQLGramaticaParser ( Parser ):
         self.enterRecursionRule(localctx, 40, self.RULE_relationExpr, _p)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 293
+            self.state = 291
             self.unaryExpr()
             self._ctx.stop = self._input.LT(-1)
-            self.state = 301
+            self.state = 299
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,22,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,21,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     if self._parseListeners is not None:
@@ -1906,17 +1894,17 @@ class SQLGramaticaParser ( Parser ):
                     _prevctx = localctx
                     localctx = SQLGramaticaParser.RelationExprContext(self, _parentctx, _parentState)
                     self.pushNewRecursionContext(localctx, _startState, self.RULE_relationExpr)
-                    self.state = 295
+                    self.state = 293
                     if not self.precpred(self._ctx, 1):
                         from antlr4.error.Errors import FailedPredicateException
                         raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
-                    self.state = 296
+                    self.state = 294
                     self.rel_op()
-                    self.state = 297
+                    self.state = 295
                     self.unaryExpr() 
-                self.state = 303
+                self.state = 301
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,22,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,21,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1972,15 +1960,19 @@ class SQLGramaticaParser ( Parser ):
             self.state = 310
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [SQLGramaticaParser.IDX, SQLGramaticaParser.NUMX, SQLGramaticaParser.CHARX, SQLGramaticaParser.STRING]:
+            if token in [SQLGramaticaParser.T__2]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 304
+                self.state = 302
+                self.match(SQLGramaticaParser.T__2)
+                self.state = 303
                 _la = self._input.LA(1)
                 if not(((((_la - 60)) & ~0x3f) == 0 and ((1 << (_la - 60)) & ((1 << (SQLGramaticaParser.IDX - 60)) | (1 << (SQLGramaticaParser.NUMX - 60)) | (1 << (SQLGramaticaParser.CHARX - 60)) | (1 << (SQLGramaticaParser.STRING - 60)))) != 0)):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
+                self.state = 304
+                self.match(SQLGramaticaParser.T__3)
                 pass
             elif token in [SQLGramaticaParser.NOT]:
                 self.enterOuterAlt(localctx, 2)
@@ -2055,7 +2047,7 @@ class SQLGramaticaParser ( Parser ):
         try:
             self.state = 329
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,25,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,24,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 312
@@ -2157,7 +2149,7 @@ class SQLGramaticaParser ( Parser ):
         try:
             self.state = 355
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,28,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,27,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 331
@@ -2178,7 +2170,7 @@ class SQLGramaticaParser ( Parser ):
                     self.constraint()
                     self.state = 341
                     self._errHandler.sync(self)
-                    _alt = self._interp.adaptivePredict(self._input,26,self._ctx)
+                    _alt = self._interp.adaptivePredict(self._input,25,self._ctx)
                     while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                         if _alt==1:
                             self.state = 337
@@ -2187,7 +2179,7 @@ class SQLGramaticaParser ( Parser ):
                             self.constraint() 
                         self.state = 343
                         self._errHandler.sync(self)
-                        _alt = self._interp.adaptivePredict(self._input,26,self._ctx)
+                        _alt = self._interp.adaptivePredict(self._input,25,self._ctx)
 
 
 
@@ -2758,7 +2750,7 @@ class SQLGramaticaParser ( Parser ):
                 elif token in [SQLGramaticaParser.EOF, SQLGramaticaParser.T__1, SQLGramaticaParser.CREATE, SQLGramaticaParser.ALTER, SQLGramaticaParser.DROP, SQLGramaticaParser.SHOW, SQLGramaticaParser.USE, SQLGramaticaParser.INSERT, SQLGramaticaParser.SELECT, SQLGramaticaParser.UPDATE, SQLGramaticaParser.DELETE]:
                     pass
                 else:
-                    raise NoViableAltException(self)
+                    pass
 
 
         except RecognitionException as re:
