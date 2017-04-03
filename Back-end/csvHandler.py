@@ -65,6 +65,9 @@ def dumbSearch(rowQuery):
 			rowCounter += 1
 	return result
 
+def showDatabases():
+	return (next(os.walk('.'))[1])
+
 def createDatabase(databaseName):
 	newDatabaseDirectory = (r'./') + databaseName
 	if not os.path.exists(newDatabaseDirectory):
@@ -438,6 +441,7 @@ def cartesianProduct(tables):
 # Testing area
 
 createDatabase('database1')
+createDatabase('database2')
 
 useDatabase('database1')
 
@@ -469,6 +473,8 @@ metadataResult, cartesianProductResult = cartesianProduct(['table1', 'table2'])
 
 print(metadataResult['columns'])
 print(cartesianProductResult)
+
+# print(showDatabases())
 
 # deleteRows({'tableName':'table1', 'indexes':range(0,2999,2)})
 
