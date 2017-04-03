@@ -1,4 +1,4 @@
-# Generated from SQLGramatica.g4 by ANTLR 4.6
+# Generated from gramatica/SQLGramatica.g4 by ANTLR 4.6
 from antlr4 import *
 
 # This class defines a complete generic visitor for a parse tree produced by SQLGramaticaParser.

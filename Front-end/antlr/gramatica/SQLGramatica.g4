@@ -1,57 +1,61 @@
 grammar SQLGramatica;
 
-CREATE: 'create'|'CREATE'|'Create';
-DATABASE: 'database'|'DATABASE'|'Database';
-DATABASES: 'databases'|'DATABASES'|'Databases';
-ALTER: 'alter'|'ALTER'|'Alter';
-RENAME: 'rename'|'RENAME'|'Rename';
-DROP: 'drop'|'DROP'|'Drop';
-TO: 'to'|'TO'|'To';
-SHOW: 'show'|'SHOW'|'Show';
-USE: 'use'|'USE'|'Use';
+CREATE: 		'create'|'CREATE'|'Create';
+DATABASE: 	'database'|'DATABASE'|'Database';
+DATABASES: 	'databases'|'DATABASES'|'Databases';
+ALTER: 			'alter'|'ALTER'|'Alter';
+RENAME: 		'rename'|'RENAME'|'Rename';
+DROP: 			'drop'|'DROP'|'Drop';
+TO: 				'to'|'TO'|'To';
+SHOW: 			'show'|'SHOW'|'Show';
+USE: 				'use'|'USE'|'Use';
 CONSTRAINT: 'constraint'|'CONSTRAINT'|'Constraint';
-PRIMARY: 'primary'|'PRIMARY'|'Primary';
-FOREIGN: 'foreign'|'FOREIGN'|'Foreign';
-KEY: 'key'|'KEY'|'Key';
+PRIMARY: 		'primary'|'PRIMARY'|'Primary';
+FOREIGN: 		'foreign'|'FOREIGN'|'Foreign';
+KEY: 				'key'|'KEY'|'Key';
 REFERENCES: 'references'|'REFERENCES'|'References';
-CHECK: 'check'|'CHECK'|'Check';
-INT: 'int'|'INT'|'Int';
-FLOAT: 'float'|'FLOAT'|'Float';
-DATE: 'date'|'DATE'|'Date';
-CHAR: 'char'|'CHAR'|'Char';
-AND: 'and'|'AND'|'And';
-OR: 'or'|'OR'|'Or';
-NOT: 'not'|'NOT'|'Not';
-TABLE: 'table'|'TABLE'|'Table';
-TABLES: 'tables'|'TABLES'|'Tables';
-ADD: 'add'|'ADD'|'Add';
-COLUMN: 'column'|'COLUMN'|'Column';
-COLUMNS: 'columns'|'COLUMNS'|'Columns';
-SHOWX: 'show'|'SHOW'|'Show';
-FROM: 'from'|'FROM'|'From';
-INSERT: 'insert'|'INSERT'|'Insert';
-SELECT: 'select'|'SELECT'|'Select';
-VALUES: 'values'|'VALUES'|'Values';
-INTO: 'into'|'INTO'|'Into';
-UPDATE: 'update'|'UPDATE'|'Update';
-SET : 'set'|'SET'|'Set';
-WHERE: 'where'|'WHERE'|'Where';
-DELETE: 'delete'|'DELETE'|'Delete';
-ORDER: 'order'|'ORDER'|'Order';
-BY: 'by'|'BY'|'By';
-ASC: 'asc'|'ASC'|'Asc';
-DESC: 'desc'|'DESC'|'Desc';
-NULL: 'null'|'NULL'|'Null';
+CHECK: 			'check'|'CHECK'|'Check';
+INT: 				'int'|'INT'|'Int';
+FLOAT: 			'float'|'FLOAT'|'Float';
+DATE: 			'date'|'DATE'|'Date';
+CHAR: 			'char'|'CHAR'|'Char';
+AND: 				'and'|'AND'|'And';
+OR: 				'or'|'OR'|'Or';
+NOT: 				'not'|'NOT'|'Not';
+TABLE: 			'table'|'TABLE'|'Table';
+TABLES: 		'tables'|'TABLES'|'Tables';
+ADD: 				'add'|'ADD'|'Add';
+COLUMN: 		'column'|'COLUMN'|'Column';
+COLUMNS: 		'columns'|'COLUMNS'|'Columns';
+SHOWX: 			'show'|'SHOW'|'Show';
+FROM: 			'from'|'FROM'|'From';
+INSERT: 		'insert'|'INSERT'|'Insert';
+SELECT: 		'select'|'SELECT'|'Select';
+VALUES: 		'values'|'VALUES'|'Values';
+INTO: 			'into'|'INTO'|'Into';
+UPDATE: 		'update'|'UPDATE'|'Update';
+SET:	 			'set'|'SET'|'Set';
+WHERE: 			'where'|'WHERE'|'Where';
+DELETE: 		'delete'|'DELETE'|'Delete';
+ORDER: 			'order'|'ORDER'|'Order';
+BY: 				'by'|'BY'|'By';
+ASC: 				'asc'|'ASC'|'Asc';
+DESC: 			'desc'|'DESC'|'Desc';
+NULL: 			'null'|'NULL'|'Null';
 
-fragment LETTERX: ('A'..'Z'|'a'..'z');
-fragment DIGITX: '0'..'9';
-fragment VARX: (' '..'~')| '\\' | '\t' | '\n' ;
+fragment LETTERX: 	('A'..'Z'|'a'..'z');
+fragment DIGITX: 		'0'..'9';
+fragment VARX: 			(' '..'~')| '\\' | '\t' | '\n' ;
 
-IDX: LETTERX (LETTERX | DIGITX|'_')*;
-NUMX: DIGITX (DIGITX)*;
-CHARX: '\''(LETTERX | DIGITX |' '| '!' | '"' | '#' | '$' | '%' | '&' | '\'' | '(' | ')' | '*'
+WS:					[ \t\r\n]+ -> channel ( HIDDEN ) ; //Whitespace declaration
+
+IDX: LETTERX ( LETTERX | DIGITX | '_' )* ;
+NUMX: DIGITX ( DIGITX )*;
+CHARS: LETTERX | DIGITX |' '| '!' | '"' | '#' | '$' | '%' | '&' | '\'' | '(' | ')' | '*'
 | '+' | ',' | '-' | '.' | '/' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | '[' | '\\' | ']'
-| '^' | '_' | '`'| '{' | '|' | '}' | '~' '\t'| '\n' | '\"' | '\'')'\'';
+| '^' | '_' | '`'| '{' | '|' | '}' | '~' '\t'| '\n' | '\"' | '\'';
+CHARX: '\'' CHARS '\'';
+STRING: '\'' CHARS ( CHARS )* '\'';
 
 SPACEX: (' '|'\n'|'\t'|'\f'|'\r\n'|'\r'){skip();};
 COMMENTX: '//'(~('\r'|'\n'))*{skip();};
@@ -68,7 +72,13 @@ database:
 	|dropDatabase
 	|showDatabase
 	|useDatabase
-	|opTable);
+	|opTable)
+	( (';' (createDatabase
+	|alterDatabase
+	|dropDatabase
+	|showDatabase
+	|useDatabase
+	|opTable) )* ';'?);
 
 createDatabase: CREATE DATABASE IDX;
 
@@ -115,8 +125,7 @@ eqExpr: relationExpr | eqExpr eq_op relationExpr ;
 
 relationExpr: unaryExpr | relationExpr rel_op unaryExpr ;
 
-unaryExpr:  '('(NOT)? IDX  ')' ; // verificar
-
+unaryExpr: ( IDX | STRING | NUMX | CHARX ) | NOT '(' expression ')' ;
 
 alterTable: ALTER TABLE IDX RENAME TO IDX | ALTER TABLE IDX action (',' action)* ;
 
