@@ -392,39 +392,8 @@ def cartesianProduct(tables):
 
 	return metadataResult, cartesianProductResult
 
-'''
-{
-	'select':['column1','column2'],
-	'from':[table1],
-	'where':{
-		'operation':'OR',
-		'firstWhere':{
-			'operation':'NULL',
-			'firstWhere':{
-				'operation':'>',
-				'constraintColumn':'column1',
-				'compareTo':100
-			},
-			'secondWhere':{}
-		},
-		'secondWhere':{
-			'operation':'AND',
-			'firstWhere':{
-				'operation':'<',
-				'constraintColumn':'column1',
-				'compareTo':100
-			},
-			'secondWhere':{
-				'operation':'=',
-				'constraintColumn':'column2',
-				'compareTo':61
-			}
-		}
-	}
-}
-'''
-
 def filterOverCartesianProduct(tableSchema, tableData, operation, firstWhere, secondWhere):
+	# print("Called with operation: "+str(operation))
 	if(operation == "NULL"):
 		resultData = []
 		#Check ambiguity
@@ -466,7 +435,7 @@ def filterOverCartesianProduct(tableSchema, tableData, operation, firstWhere, se
 		#Perform filter
 		if(firstWhere['operation'] == '='):
 			for row in tableData:
-				print("Checking if "+str(row[indexToCompare])+"("+str(type(row[indexToCompare]))+")="+str(compareTo)+"("+str(type(compareTo))+")")
+				# print("Checking if "+str(row[indexToCompare])+"("+str(type(row[indexToCompare]))+")="+str(compareTo)+"("+str(type(compareTo))+")")
 				if row[indexToCompare] == compareTo:
 					resultData.append(row)
 		elif(firstWhere['operation'] == '<'):
@@ -519,22 +488,68 @@ def filterOverCartesianProduct(tableSchema, tableData, operation, firstWhere, se
 		return firstWhereResults
 
 
-
-
-
+'''
+{
+	'select':['column1','column2'],
+	'from':[table1],
+	'where':{
+		'operation':'OR',
+		'firstWhere':{
+			'operation':'NULL',
+			'firstWhere':{
+				'operation':'>',
+				'constraintColumn':'column1',
+				'compareTo':100
+			},
+			'secondWhere':{}
+		},
+		'secondWhere':{
+			'operation':'AND',
+			'firstWhere':{
+				'operation':'<',
+				'constraintColumn':'column1',
+				'compareTo':100
+			},
+			'secondWhere':{
+				'operation':'=',
+				'constraintColumn':'column2',
+				'compareTo':61
+			}
+		}
+	}
+}
 '''
 
 def select(selectInfo):
 	#Check if cartesian product is needed
 	if(len(selectInfo['from']) > 1):
-		#Perform cartesian product
+		#Perform FROM, cartesian product
 		cartesianProductSchema, cartesianProductResult = cartesianProduct(selectInfo['from'])
 
+		#Perform WHERE, row filtering
+		filterResult = filterOverCartesianProduct(cartesianProductSchema, cartesianProductResult, selectInfo['where']['operation'], selectInfo['where']['firstWhere'], selectInfo['where']['secondWhere'])
 
+		#Perform SELECT, column selection
+		selectedColumns = []
+		# print(cartesianProductSchema)
+		for columnName in selectInfo['select']:
+			for i in range(len(cartesianProductSchema['columns'])):
+				if cartesianProductSchema['columns'][i]['columnName'] == columnName:
+					selectedColumns.append(i)
+
+		# print(selectedColumns)
+
+		finalResult = []
+		for row in filterResult:
+			tempRow = []
+			for column in selectedColumns:
+				tempRow.append(row[column])
+			finalResult.append(tempRow)
+
+		return finalResult
 	else:
 		#Continue select using the hash
-
-'''
+		print("Pending")
 
 
 
@@ -601,19 +616,58 @@ insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':
 print("Inserting into table 1")
 insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[36, '12-12-1212']})
 
-print("Cartesian product")
-metadataResult, cartesianProductResult = cartesianProduct(['table1', 'table2'])
+# print("Cartesian product")
+# metadataResult, cartesianProductResult = cartesianProduct(['table1', 'table2'])
 
-print(metadataResult['columns'])
-print(cartesianProductResult)
+# print(metadataResult['columns'])
+# print(cartesianProductResult)
 
 # filterResult = filterOverCartesianProduct(metadataResult, cartesianProductResult, "NULL", {'operation':'<', 'constraintColumn':'column2', 'compareTo':36}, {})
 # print(filterResult)
 
 
-filterResult = filterOverCartesianProduct(metadataResult, cartesianProductResult, "OR", {'operation':'NULL', 'firstWhere':{'operation':'<', 'constraintColumn':'column2', 'compareTo':36}, 'secondWhere':{}}, {'operation':'NULL', 'firstWhere':{'operation':'=', 'constraintColumn':'column4', 'compareTo':'Bryan Chan'}, 'secondWhere':{}})
-print(filterResult)
+# filterResult = filterOverCartesianProduct(metadataResult, cartesianProductResult, "OR", {'operation':'NULL', 'firstWhere':{'operation':'<', 'constraintColumn':'column2', 'compareTo':36}, 'secondWhere':{}}, {'operation':'NULL', 'firstWhere':{'operation':'=', 'constraintColumn':'column4', 'compareTo':'Bryan Chan'}, 'secondWhere':{}})
+# print(filterResult)
 
+selectInfo = {
+	'select':['column2','column4'],
+	'from':['table1','table2'],
+	'where':{
+		'operation':'OR',
+		'firstWhere':{
+			'operation':'NULL',
+			'firstWhere':{
+				'operation':'=',
+				'constraintColumn':'column4',
+				'compareTo':'Bryan Chan'
+			},
+			'secondWhere':{}
+		},
+		'secondWhere':{
+			'operation':'AND',
+			'firstWhere':{
+				'operation':'NULL',
+				'firstWhere':{
+					'operation':'=',
+					'constraintColumn':'column4',
+					'compareTo':'Alejandro Cortes'
+				},
+				'secondWhere':{}
+			},
+			'secondWhere':{
+				'operation':'NULL',
+				'firstWhere':{
+					'operation':'<',
+					'constraintColumn':'column2',
+					'compareTo':36
+				},
+				'secondWhere':{}
+			}
+		}
+	}
+}
+
+print(select(selectInfo))
 
 # print(showDatabases())
 
