@@ -23,12 +23,13 @@ body{
 	height: 100px;
 	border: none;
 	border-radius: 16px;
-	cursor: pointer;
+	
 }
 #home-buttons button:hover:enabled,
 #btn-load:hover:enabled{
 	background-color: #e0d064;
 	color: white;
+	cursor: pointer;
 }
 input{
 	padding-top: 10px;
