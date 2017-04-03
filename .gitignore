@@ -91,3 +91,9 @@ ENV/
 # Ignore CSV's and JSON's, they're usually too big to upload and can be generated from the python scripts
 *.csv
 *.json
+
+# Ignore Trash Java files
+.class
+.bat
+.txt
+.jar
