@@ -115,7 +115,7 @@ check: IDX CHECK (exp);
 
 // Expression
 
-exp: expression | ;
+exp: expression ;
 
 expression : andExpr| expression OR andExpr  ;
 
@@ -125,7 +125,7 @@ eqExpr: relationExpr | eqExpr eq_op relationExpr ;
 
 relationExpr: unaryExpr | relationExpr rel_op unaryExpr ;
 
-unaryExpr: ( IDX | STRING | NUMX | CHARX ) | NOT '(' expression ')' ;
+unaryExpr: '(' ( IDX | STRING | NUMX | CHARX ) ')' | NOT '(' expression ')' ;
 
 alterTable: ALTER TABLE IDX RENAME TO IDX | ALTER TABLE IDX action (',' action)* ;
 
