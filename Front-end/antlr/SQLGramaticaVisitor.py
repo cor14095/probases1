@@ -90,28 +90,38 @@ class SQLGramaticaVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SQLGramaticaParser#expression.
-    def visitExpression(self, ctx):
+    # Visit a parse tree produced by SQLGramaticaParser#orExpression.
+    def visitOrExpression(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SQLGramaticaParser#andExpr.
-    def visitAndExpr(self, ctx):
+    # Visit a parse tree produced by SQLGramaticaParser#andExpression.
+    def visitAndExpression(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SQLGramaticaParser#eqExpr.
-    def visitEqExpr(self, ctx):
+    # Visit a parse tree produced by SQLGramaticaParser#equalsExpression.
+    def visitEqualsExpression(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SQLGramaticaParser#relationExpr.
-    def visitRelationExpr(self, ctx):
+    # Visit a parse tree produced by SQLGramaticaParser#relationExpression.
+    def visitRelationExpression(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SQLGramaticaParser#unaryExpr.
-    def visitUnaryExpr(self, ctx):
+    # Visit a parse tree produced by SQLGramaticaParser#addSubsExpression.
+    def visitAddSubsExpression(self, ctx):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SQLGramaticaParser#mulDivExpression.
+    def visitMulDivExpression(self, ctx):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SQLGramaticaParser#basicExpression.
+    def visitBasicExpression(self, ctx):
         return self.visitChildren(ctx)
 
 

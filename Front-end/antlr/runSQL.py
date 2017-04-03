@@ -1,35 +1,12 @@
 import sys
+import logging
+
 from antlr4 import *
 from SQLGramaticaLexer import SQLGramaticaLexer
 from SQLGramaticaParser import SQLGramaticaParser
-from antlr4.error.ErrorListener import ErrorListener
+from ParserErrorListener import ParserErrorListener
 
-# This class will 'override' the actual ErrorListener
-# It'll collect all errors in a file and save the file at:
-# -> output/errors.txt
-# Base code from:
-# -> http://stackoverflow.com/a/32228598/4808919
-class ParserErrorListener( ErrorListener ):
-
-    def __init__(self):
-        super(ParserErrorListener, self).__init__()
-
-    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-        print "OH SHIT WADUP!"
-        #raise Exception("Oh no!!")
-
-    def reportAmbiguity(self, recognizer, dfa, startIndex, stopIndex, exact, ambigAlts, configs):
-        print "OH SHIT WADUP!"
-        #raise Exception("Oh no!!")
-
-    def reportAttemptingFullContext(self, recognizer, dfa, startIndex, stopIndex, conflictingAlts, configs):
-        print "OH SHIT WADUP!"
-        #raise Exception("Oh no!!")
-
-    def reportContextSensitivity(self, recognizer, dfa, startIndex, stopIndex, prediction, configs):
-        print "OH SHIT WADUP!"
-        #raise Exception("Oh no!!")
-
+# Main function definition
 def main(argv):
     input = FileStream(argv[1])
     lexer = SQLGramaticaLexer(input)
@@ -38,5 +15,11 @@ def main(argv):
     parser._listeners = [ ParserErrorListener() ]
     tree = parser.database()
 
+# MAIN PROGRAM CODE:
+
+file = open("output/parserErrors.log", "w")
+
 if __name__ == '__main__':
     main(sys.argv)
+
+file.close()
