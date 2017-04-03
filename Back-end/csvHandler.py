@@ -419,44 +419,74 @@ def filterOverCartesianProduct(tableSchema, tableData, operation, firstWhere, se
 		desiredType = tableSchema['columns'][indexToCompare]['type']
 		compareTo = firstWhere['compareTo']
 
-		# try:
-		# 	if((desiredType == 'string') or (desiredType == 'date')):
-		# 		compareTo = str(compareTo)
-		# 	elif(desiredType == 'int'):
-		# 		compareTo = int(compareTo)
-		# 	elif(desiredType == 'float'):
-		# 		compareTo = float(compareTo)
-		# except:
-		# 	print("Error, "+str(compareTo)+" couldnt be casted to the type of: "+firstWhere['constraintColumn']+" ("+desiredType+")")
-		# 	return False
+		try:
+			if((desiredType == 'string') or (desiredType == 'date')):
+				compareTo = str(compareTo)
+			elif(desiredType == 'int'):
+				compareTo = int(compareTo)
+			elif(desiredType == 'float'):
+				compareTo = float(compareTo)
+		except:
+			print("Error, "+str(compareTo)+" couldnt be casted to the type of: "+firstWhere['constraintColumn']+" ("+desiredType+")")
+			return False
 
-		compareTo = str(compareTo)
+		# compareTo = str(compareTo)
 
 		#Perform filter
 		if(firstWhere['operation'] == '='):
 			for row in tableData:
 				# print("Checking if "+str(row[indexToCompare])+"("+str(type(row[indexToCompare]))+")="+str(compareTo)+"("+str(type(compareTo))+")")
-				if row[indexToCompare] == compareTo:
+				compareRow = row[indexToCompare]
+				if(desiredType == 'int'):
+					compareRow = int(compareRow)
+				elif(desiredType == 'float'):
+					compareRow = float(compareRow)
+				if compareRow == compareTo:
 					resultData.append(row)
 		elif(firstWhere['operation'] == '<'):
 			for row in tableData:
-				if row[indexToCompare] < compareTo:
+				compareRow = row[indexToCompare]
+				if(desiredType == 'int'):
+					compareRow = int(compareRow)
+				elif(desiredType == 'float'):
+					compareRow = float(compareRow)
+				if compareRow < compareTo:
 					resultData.append(row)
 		elif(firstWhere['operation'] == '<='):
 			for row in tableData:
-				if row[indexToCompare] <= compareTo:
+				compareRow = row[indexToCompare]
+				if(desiredType == 'int'):
+					compareRow = int(compareRow)
+				elif(desiredType == 'float'):
+					compareRow = float(compareRow)
+				if compareRow <= compareTo:
 					resultData.append(row)
 		elif(firstWhere['operation'] == '>'):
 			for row in tableData:
-				if row[indexToCompare] > compareTo:
+				compareRow = row[indexToCompare]
+				if(desiredType == 'int'):
+					compareRow = int(compareRow)
+				elif(desiredType == 'float'):
+					compareRow = float(compareRow)
+				if compareRow > compareTo:
 					resultData.append(row)
 		elif(firstWhere['operation'] == '>='):
 			for row in tableData:
-				if row[indexToCompare] >= compareTo:
+				compareRow = row[indexToCompare]
+				if(desiredType == 'int'):
+					compareRow = int(compareRow)
+				elif(desiredType == 'float'):
+					compareRow = float(compareRow)
+				if compareRow >= compareTo:
 					resultData.append(row)
 		elif(firstWhere['operation'] == 'not'):
 			for row in tableData:
-				if row[indexToCompare] != compareTo:
+				compareRow = row[indexToCompare]
+				if(desiredType == 'int'):
+					compareRow = int(compareRow)
+				elif(desiredType == 'float'):
+					compareRow = float(compareRow)
+				if compareRow != compareTo:
 					resultData.append(row)
 		
 		return resultData
@@ -589,45 +619,36 @@ def select(selectInfo):
 
 # Testing area
 
-createDatabase('database1')
+# createDatabase('database1')
 
 useDatabase('database1')
 
-tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column3', 'key':2, 'type':'date'},{'columnName':'column4', 'key':0, 'type':'string'}]}
-createTable(tableSchemaExample)
+# tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column3', 'key':2, 'type':'date'},{'columnName':'column4', 'key':0, 'type':'string'}]}
+# createTable(tableSchemaExample)
 
-tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column3', 'type':'date'},{'columnName':'column2', 'key':0, 'type':'int'}]}
-createTable(tableSchemaExample)
+# tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column3', 'type':'date'},{'columnName':'column2', 'key':0, 'type':'int'}]}
+# createTable(tableSchemaExample)
 
+# print("Inserting into table 2")
+# insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
 
+# print("Inserting into table 2")
+# insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['24-24-2424', 'Alejandro Cortes']})
 
-print("Inserting into table 2")
-insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
+# print("Inserting into table 1")
+# insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[12, '12-12-1212']})
 
-print("Inserting into table 2")
-insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['24-24-2424', 'Alejandro Cortes']})
+# print("Inserting into table 1")
+# insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[24, '12-12-1212']})
 
-print("Inserting into table 1")
-insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[12, '12-12-1212']})
+# print("Inserting into table 1")
+# insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[36, '12-12-1212']})
 
-print("Inserting into table 1")
-insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[24, '12-12-1212']})
-
-print("Inserting into table 1")
-insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[36, '12-12-1212']})
-
-# print("Cartesian product")
-# metadataResult, cartesianProductResult = cartesianProduct(['table1', 'table2'])
-
-# print(metadataResult['columns'])
-# print(cartesianProductResult)
-
-# filterResult = filterOverCartesianProduct(metadataResult, cartesianProductResult, "NULL", {'operation':'<', 'constraintColumn':'column2', 'compareTo':36}, {})
-# print(filterResult)
+# for i in range(10000):
+# 	print("Inserting into table 1: "+str(i))
+# 	insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[random.randint(0,1000), '12-12-1212']})
 
 
-# filterResult = filterOverCartesianProduct(metadataResult, cartesianProductResult, "OR", {'operation':'NULL', 'firstWhere':{'operation':'<', 'constraintColumn':'column2', 'compareTo':36}, 'secondWhere':{}}, {'operation':'NULL', 'firstWhere':{'operation':'=', 'constraintColumn':'column4', 'compareTo':'Bryan Chan'}, 'secondWhere':{}})
-# print(filterResult)
 
 selectInfo = {
 	'select':['column2','column4'],
@@ -659,7 +680,7 @@ selectInfo = {
 				'firstWhere':{
 					'operation':'<',
 					'constraintColumn':'column2',
-					'compareTo':36
+					'compareTo':100
 				},
 				'secondWhere':{}
 			}
@@ -672,27 +693,3 @@ print(select(selectInfo))
 # print(showDatabases())
 
 # deleteRows({'tableName':'table1', 'indexes':range(0,2999,2)})
-
-# checkFile = open(r'./database1/table1.json')
-# checkFile = json.load(checkFile)
-
-
-# print(checkFile['2532'])
-
-
-
-# firstResult = dumbSearch('0')
-# secondResult = dumbSearch('1')
-# thirdResult = dumbSearch('2')
-
-# with open('exampleDictionary.json') as input:
-# 	exampleDictionary = json.load(input)
-# 	firstResult = exampleDictionary['0']['0']
-# 	secondResult = exampleDictionary['0']['1']
-# 	thirdResult = exampleDictionary['0']['2']
-
-#getColumns('example')
-# print(getData('example', [0,1]))
-
-# generateExampleCSV()
-# generateDictionary('example')
