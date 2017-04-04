@@ -523,7 +523,7 @@ def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
 		metadata = json.load(metadataFile)
 
 		for column in metadata['tables'][tableName]['columns']:
-			# print("Comparing: "+column['columnName']+" with "+firstWhere['constraintColumn'])
+			print("Comparing: "+column['columnName']+" with "+firstWhere['constraintColumn'])
 			if column['columnName'] == firstWhere['constraintColumn']:
 				desiredType = column['type']
 
@@ -738,29 +738,39 @@ def filterOverSingleTableWithIndexes(tableName, operation, firstWhere, secondWhe
 
 	elif(operation == "AND"):
 		#Filter childs
-		firstWhereResults = filterOverSingleTable(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
-		secondWhereResults = filterOverSingleTable(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+		firstWhereIndexes, firstWhereResults = filterOverSingleTableWithIndexes(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
+		secondWhereIndexes, secondWhereResults = filterOverSingleTableWithIndexes(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+
+		#AND indexes of childs
+		rowIndexes = []
+		for index in firstWhereIndexes:
+			if index in secondWhereIndexes:
+				rowIndexes.append(index)
 
 		#AND results of childs
 		resultData = []
-
 		for result in firstWhereResults:
 			if result in secondWhereResults:
 				resultData.append(result)
 
-		return resultData
+		return rowIndexes, resultData
 
 	elif(operation == "OR"):
 		#Filter childs
-		firstWhereResults = filterOverSingleTable(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
-		secondWhereResults = filterOverSingleTable(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+		firstWhereIndexes, firstWhereResults = filterOverSingleTableWithIndexes(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
+		secondWhereIndexes, secondWhereResults = filterOverSingleTableWithIndexes(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+
+		#OR indexes of childs
+		for index in secondWhereIndexes:
+			if index not in firstWhereIndexes:
+				firstWhereIndexes.append(index)
 
 		#OR results of childs
 		for result in secondWhereResults:
 			if result not in firstWhereResults:
 				firstWhereResults.append(result)
 
-		return firstWhereResults
+		return firstWhereIndexes, firstWhereResults
 
 def select(selectInfo):
 	#Check if cartesian product is needed
@@ -815,6 +825,7 @@ def select(selectInfo):
 
 		return finalResult
 
+'''
 deleteInfoExample = {
 	'from':['table1'],
 	'where':{
@@ -851,6 +862,7 @@ deleteInfoExample = {
 		}
 	}
 }
+'''
 
 def delete(deleteInfo):
 	#Open metadata file
@@ -858,16 +870,71 @@ def delete(deleteInfo):
 	metadata = json.load(metadataFile)
 
 	#Check references to this table
-	tablesReferencingThis = []
+	referencedValues = {}
 
 	#Collect references to this table
-	for tableName, tableData in metadata['tables']:
-		if 'constraintTable' in tableData:
-			if tableData['constraintTable'] == deleteInfo['from'][0]:
-				tablesReferencingThis.append(tableName)
+	for tableName, tableData in metadata['tables'].items():
+		for column in tableData['columns']:
+			if column['key'] == FOREIGN_KEY:
+				if column['constraintTable'] == deleteInfo['from'][0]:
+					#Load table hash to retrieve values in column
+					tableHashFile = open('./'+currentDatabase+'/'+tableName+'.hash', 'r')
+					tableHash = json.load(tableHashFile)
+					referencedValues[column['constraintColumn']] = tableHash[column['columnName']].keys()
+
+	# print(referencedValues)
 
 	#Perform WHERE, generate indexes to be deleted in table
 	indexesToDelete, rowsToDelete = filterOverSingleTableWithIndexes(deleteInfo['from'][0], deleteInfo['where']['operation'], deleteInfo['where']['firstWhere'], deleteInfo['where']['secondWhere'])
+
+	# print(rowsToDelete)
+
+	#Check if we're attempting to delete a referenced row
+	for columnName, values in referencedValues.items():
+		for i in range(len(metadata['tables'][deleteInfo['from'][0]]['columns'])):
+			if metadata['tables'][deleteInfo['from'][0]]['columns'][i]['columnName'] == columnName:
+				currentIndex = i
+
+		for row in rowsToDelete:
+			if row[currentIndex] in values:
+				print("Error, attempting to delete rows were values are being referenced to in another table.")
+				return False
+
+	#If its all clear proceed to delete rows
+
+	
+	#Delete from table data
+	#Open table file
+	tableFile = open(r'./'+currentDatabase+'/'+deleteInfo['from'][0]+'.json', 'r')
+	table = json.load(tableFile)
+	for indexToDelete in indexesToDelete:
+		table.pop(str(indexToDelete))
+
+	#Write back file data
+	tableFile = open(r'./'+currentDatabase+'/'+deleteInfo['from'][0]+'.json', 'w')
+	json.dump(table, tableFile)
+
+	#Delete from hash
+	#Open table hash file
+	tableHashFile = open(r'./'+currentDatabase+'/'+deleteInfo['from'][0]+'.hash', 'r')
+	tableHash = json.load(tableHashFile)
+	for column, columnHash in tableHash.items():
+		for value, indexes in columnHash.items():
+			newIndexes = []
+			for index in indexes:
+				if index not in indexesToDelete:
+					newIndexes.append(index)
+			if(len(newIndexes) == 0):
+				tableHash[column].pop(value)
+			else:
+				tableHash[column][value] = newIndexes
+
+	#Write back hash info
+	tableHashFile = open(r'./'+currentDatabase+'/'+deleteInfo['from'][0]+'.hash', 'w')
+	json.dump(tableHash, tableHashFile)
+	
+	print("Succesfully deleted "+str(len(indexesToDelete))+" rows.")
+	
 
 
 
@@ -907,24 +974,24 @@ def delete(deleteInfo):
 
 # Testing area
 
-# createDatabase('database1')
+createDatabase('database1')
 
 useDatabase('database1')
 
-# tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column3', 'key':2, 'type':'date'},{'columnName':'column4', 'key':0, 'type':'string'}]}
-# createTable(tableSchemaExample)
+tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column3', 'key':2, 'type':'date'},{'columnName':'column4', 'key':0, 'type':'string'}]}
+createTable(tableSchemaExample)
 
-# tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column3', 'type':'date'},{'columnName':'column2', 'key':0, 'type':'int'}]}
-# createTable(tableSchemaExample)
+tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column3', 'type':'date'},{'columnName':'column2', 'key':0, 'type':'int'}]}
+createTable(tableSchemaExample)
 
-# print("Inserting into table 2")
-# insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
+print("Inserting into table 2")
+insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
 
-# print("Inserting into table 2")
-# insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['24-24-2424', 'Alejandro Cortes']})
+print("Inserting into table 2")
+insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['24-24-2424', 'Alejandro Cortes']})
 
-# print("Inserting into table 1")
-# insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[12, '12-12-1212']})
+print("Inserting into table 1")
+insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[12, '12-12-1212']})
 
 # print("Inserting into table 1")
 # insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[24, '12-12-1212']})
@@ -932,9 +999,9 @@ useDatabase('database1')
 # print("Inserting into table 1")
 # insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[36, '12-12-1212']})
 
-# for i in range(10000):
-# 	print("Inserting into table 1: "+str(i))
-# 	insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[random.randint(0,1000), '12-12-1212']})
+for i in range(500):
+	# print("Inserting into table 1: "+str(i))
+	insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[random.randint(0,1000), '12-12-1212']})
 
 
 '''
@@ -978,7 +1045,7 @@ selectInfo = {
 
 print(select(selectInfo))
 '''
-
+'''
 selectInfo = {
 	'select':['column2'],
 	'from':['table1'],
@@ -1018,6 +1085,34 @@ selectInfo = {
 }
 
 print(select(selectInfo))
+'''
+
+deleteInfoExample = {
+	'from':['table1'],
+	'where':{
+		'operation':'OR',
+		'firstWhere':{
+			'operation':'NULL',
+			'firstWhere':{
+				'operation':'>',
+				'constraintColumn':'column2',
+				'compareTo':20
+			},
+			'secondWhere':{}
+		},
+		'secondWhere':{
+			'operation':'NULL',
+			'firstWhere':{
+				'operation':'<',
+				'constraintColumn':'column2',
+				'compareTo':10
+			},
+			'secondWhere':{}
+		}
+	}
+}
+
+delete(deleteInfoExample)
 
 # print(showDatabases())
 
