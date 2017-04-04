@@ -12,25 +12,23 @@ class SQLGramaticaPrintListener(SQLGramaticaListener):
     def enterDatabase(self, ctx):
         print("Hello: %s" % ctx.getText())
 
-# Main function definition
-def main(argv):
-    input = FileStream(argv[1])
-    lexer = SQLGramaticaLexer(input)
-    stream = CommonTokenStream(lexer)
-    parser = SQLGramaticaParser(stream)
-    parser._listeners = [ ParserErrorListener() ]
-    print "Entrar al arbol!"
-    tree = parser.database()
-    printer = SQLGramaticaPrintListener()
-    walker = ParseTreeWalker()
-    walker.walk(printer, tree)
-    print "Salir del arbol!"
-
 # MAIN PROGRAM CODE:
 
+# Inputs and file creations.
 file = open("..\web\static\parserErrors.log", "w")
+input = FileStream(sys.argv[1])
 
-if __name__ == '__main__':
-    main(sys.argv)
+# Compiling code.
+lexer = SQLGramaticaLexer(input)
+stream = CommonTokenStream(lexer)
+parser = SQLGramaticaParser(stream)
+parser._listeners = [ ParserErrorListener() ]
+#  Parser tree visitor check
+print "Entrar al arbol!"
+tree = parser.database()
+printer = SQLGramaticaPrintListener()
+walker = ParseTreeWalker()
+walker.walk(printer, tree)
+print "Salir del arbol!"
 
 file.close()
