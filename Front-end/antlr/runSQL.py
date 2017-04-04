@@ -49,7 +49,7 @@ class SQLGramaticaPrintListener(SQLGramaticaListener):
                 # Late work...
             else:
                 # This is not an opTable
-                print "notOPTable: " + ctxChild.getText()
+                #print "notOPTable: " + ctxChild.getText()
                 # Get the first child of each query.
                 qType = ctxChild.getChild(0).getText()
                 print qType
@@ -58,16 +58,38 @@ class SQLGramaticaPrintListener(SQLGramaticaListener):
                     # CREATE comand
                     IDX = ctxChild.getChild(2).getText()
                     setDBName(IDX)
-                    output = csvHandler.createDatabase(IDX)
-                    print output
-
+                    msg = csvHandler.createDatabase(IDX)
+                    addOutput(msg)
+                elif (qType.upper() == "ALTER"):
+                    # ALTER comand
+                    IDX = ctxChild.getChild(2).getText()
+                    IDX2 = ctxChild.getChild(5).getText()
+                    #msg = csvHandler.alterDatabase(IDX, IDX2)
+                    #addOutput(msg)
+                elif (qType.upper() == "DROP"):
+                    # DROP comand
+                    IDX = ctxChild.getChild(2).getText()
+                    msg = csvHandler.dropDatabase(IDX)
+                    addOutput(msg)
+                elif (qType.upper() == "SHOW"):
+                    # SHOW comand
+                    msg = csvHandler.showDatabases()
+                    addOutput(msg)
+                elif (qType.upper() == "USE"):
+                    # USE comand
+                    IDX = ctxChild.getChild(2).getText()
+                    msg = csvHandler.useDatabase(IDX)
+                    addOutput(msg)
+                else:
+                    msg = "Unkown querry - " + ctxChild.getText()
+                    addOutput(msg)
 
         #print "\nDatabase name: " + getDBName()
 
 # Main function definition with a set database name
 def runSQL(path, DBName):
     # Inputs and file creations.
-    file = open("static\parserErrors.log", "w")
+    file = open("static/parserErrors.log", "w")
     input = FileStream(path)
     setDBName(DBName)
 
