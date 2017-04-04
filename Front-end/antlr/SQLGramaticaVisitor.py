@@ -4,6 +4,7 @@ from antlr4 import *
 # This class defines a complete generic visitor for a parse tree produced by SQLGramaticaParser.
 
 class SQLGramaticaVisitor(ParseTreeVisitor):
+    print "Hola mundo!"
 
     # Visit a parse tree produced by SQLGramaticaParser#literal.
     def visitLiteral(self, ctx):
@@ -22,6 +23,7 @@ class SQLGramaticaVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by SQLGramaticaParser#database.
     def visitDatabase(self, ctx):
+        print (ctx.getText())
         return self.visitChildren(ctx)
 
 
@@ -167,6 +169,7 @@ class SQLGramaticaVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by SQLGramaticaParser#selectFrom.
     def visitSelectFrom(self, ctx):
+        print (ctx.getText())
         return self.visitChildren(ctx)
 
 
@@ -193,5 +196,3 @@ class SQLGramaticaVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by SQLGramaticaParser#mult_op.
     def visitMult_op(self, ctx):
         return self.visitChildren(ctx)
-
-

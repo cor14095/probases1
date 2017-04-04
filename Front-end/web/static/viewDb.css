@@ -64,3 +64,18 @@ textarea{
 .clear{
 	clear: both;
 }
+table {
+	border-collapse: collapse;
+	border: 2px black solid;
+	font: 12px sans-serif;
+	width: 100%;
+	height: 100%;
+	overflow: scroll;
+}
+
+td {
+	min-height: 30px;
+	min-width: 130px;
+	border: 1px black solid;
+	padding: 5px;
+}

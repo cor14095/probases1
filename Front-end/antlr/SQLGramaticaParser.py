@@ -427,6 +427,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_literal
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterLiteral"):
+                listener.enterLiteral(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitLiteral"):
+                listener.exitLiteral(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitLiteral"):
                 return visitor.visitLiteral(self)
@@ -495,6 +503,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_fecha
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterFecha"):
+                listener.enterFecha(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitFecha"):
+                listener.exitFecha(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitFecha"):
                 return visitor.visitFecha(self)
@@ -553,6 +569,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_programa
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterPrograma"):
+                listener.enterPrograma(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitPrograma"):
+                listener.exitPrograma(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitPrograma"):
@@ -651,6 +675,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_database
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterDatabase"):
+                listener.enterDatabase(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitDatabase"):
+                listener.exitDatabase(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitDatabase"):
@@ -781,6 +813,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_createDatabase
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterCreateDatabase"):
+                listener.enterCreateDatabase(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitCreateDatabase"):
+                listener.exitCreateDatabase(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitCreateDatabase"):
                 return visitor.visitCreateDatabase(self)
@@ -837,6 +877,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_alterDatabase
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterAlterDatabase"):
+                listener.enterAlterDatabase(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitAlterDatabase"):
+                listener.exitAlterDatabase(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitAlterDatabase"):
                 return visitor.visitAlterDatabase(self)
@@ -890,6 +938,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_dropDatabase
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterDropDatabase"):
+                listener.enterDropDatabase(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitDropDatabase"):
+                listener.exitDropDatabase(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitDropDatabase"):
                 return visitor.visitDropDatabase(self)
@@ -933,6 +989,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_showDatabase
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterShowDatabase"):
+                listener.enterShowDatabase(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitShowDatabase"):
+                listener.exitShowDatabase(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitShowDatabase"):
@@ -978,6 +1042,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_useDatabase
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterUseDatabase"):
+                listener.enterUseDatabase(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitUseDatabase"):
+                listener.exitUseDatabase(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitUseDatabase"):
@@ -1052,6 +1124,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_opTable
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterOpTable"):
+                listener.enterOpTable(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitOpTable"):
+                listener.exitOpTable(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitOpTable"):
@@ -1149,6 +1229,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_tipo
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterTipo"):
+                listener.enterTipo(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitTipo"):
+                listener.exitTipo(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitTipo"):
                 return visitor.visitTipo(self)
@@ -1243,6 +1331,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_createTable
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterCreateTable"):
+                listener.enterCreateTable(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitCreateTable"):
+                listener.exitCreateTable(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitCreateTable"):
@@ -1347,6 +1443,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_constraint
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterConstraint"):
+                listener.enterConstraint(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitConstraint"):
+                listener.exitConstraint(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitConstraint"):
                 return visitor.visitConstraint(self)
@@ -1433,6 +1537,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_primaryKey
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterPrimaryKey"):
+                listener.enterPrimaryKey(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitPrimaryKey"):
+                listener.exitPrimaryKey(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitPrimaryKey"):
                 return visitor.visitPrimaryKey(self)
@@ -1504,6 +1616,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_foreignKey
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterForeignKey"):
+                listener.enterForeignKey(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitForeignKey"):
+                listener.exitForeignKey(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitForeignKey"):
@@ -1594,6 +1714,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_check
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterCheck"):
+                listener.enterCheck(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitCheck"):
+                listener.exitCheck(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitCheck"):
                 return visitor.visitCheck(self)
@@ -1636,6 +1764,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_exp
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterExp"):
+                listener.enterExp(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitExp"):
+                listener.exitExp(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitExp"):
@@ -1697,6 +1833,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_orExpression
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterOrExpression"):
+                listener.enterOrExpression(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitOrExpression"):
+                listener.exitOrExpression(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitOrExpression"):
@@ -1767,6 +1911,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_andExpression
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterAndExpression"):
+                listener.enterAndExpression(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitAndExpression"):
+                listener.exitAndExpression(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitAndExpression"):
@@ -1839,6 +1991,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_equalsExpression
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterEqualsExpression"):
+                listener.enterEqualsExpression(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitEqualsExpression"):
+                listener.exitEqualsExpression(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitEqualsExpression"):
                 return visitor.visitEqualsExpression(self)
@@ -1909,6 +2069,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_relationExpression
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterRelationExpression"):
+                listener.enterRelationExpression(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitRelationExpression"):
+                listener.exitRelationExpression(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitRelationExpression"):
@@ -1981,6 +2149,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_addSubsExpression
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterAddSubsExpression"):
+                listener.enterAddSubsExpression(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitAddSubsExpression"):
+                listener.exitAddSubsExpression(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitAddSubsExpression"):
                 return visitor.visitAddSubsExpression(self)
@@ -2052,6 +2228,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_mulDivExpression
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterMulDivExpression"):
+                listener.enterMulDivExpression(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitMulDivExpression"):
+                listener.exitMulDivExpression(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitMulDivExpression"):
                 return visitor.visitMulDivExpression(self)
@@ -2121,6 +2305,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_basicExpression
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterBasicExpression"):
+                listener.enterBasicExpression(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitBasicExpression"):
+                listener.exitBasicExpression(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitBasicExpression"):
@@ -2208,6 +2400,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_alterTable
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterAlterTable"):
+                listener.enterAlterTable(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitAlterTable"):
+                listener.exitAlterTable(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitAlterTable"):
@@ -2310,6 +2510,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_action
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterAction"):
+                listener.enterAction(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitAction"):
+                listener.exitAction(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitAction"):
@@ -2421,6 +2629,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_dropTable
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterDropTable"):
+                listener.enterDropTable(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitDropTable"):
+                listener.exitDropTable(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitDropTable"):
                 return visitor.visitDropTable(self)
@@ -2464,6 +2680,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_showTables
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterShowTables"):
+                listener.enterShowTables(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitShowTables"):
+                listener.exitShowTables(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitShowTables"):
@@ -2512,6 +2736,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_showColumns
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterShowColumns"):
+                listener.enterShowColumns(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitShowColumns"):
+                listener.exitShowColumns(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitShowColumns"):
@@ -2574,6 +2806,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_insertInto
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterInsertInto"):
+                listener.enterInsertInto(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitInsertInto"):
+                listener.exitInsertInto(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitInsertInto"):
@@ -2678,6 +2918,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_updateSet
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterUpdateSet"):
+                listener.enterUpdateSet(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitUpdateSet"):
+                listener.exitUpdateSet(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitUpdateSet"):
                 return visitor.visitUpdateSet(self)
@@ -2760,6 +3008,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_deleteFrom
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterDeleteFrom"):
+                listener.enterDeleteFrom(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitDeleteFrom"):
+                listener.exitDeleteFrom(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitDeleteFrom"):
@@ -2850,6 +3106,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_selectFrom
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterSelectFrom"):
+                listener.enterSelectFrom(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitSelectFrom"):
+                listener.exitSelectFrom(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitSelectFrom"):
@@ -2955,6 +3219,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_sep
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterSep"):
+                listener.enterSep(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitSep"):
+                listener.exitSep(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitSep"):
                 return visitor.visitSep(self)
@@ -3016,6 +3288,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_rel_op
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterRel_op"):
+                listener.enterRel_op(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitRel_op"):
+                listener.exitRel_op(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitRel_op"):
                 return visitor.visitRel_op(self)
@@ -3056,6 +3336,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_eq_op
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterEq_op"):
+                listener.enterEq_op(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitEq_op"):
+                listener.exitEq_op(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitEq_op"):
@@ -3098,6 +3386,14 @@ class SQLGramaticaParser ( Parser ):
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_add_op
 
+        def enterRule(self, listener):
+            if hasattr(listener, "enterAdd_op"):
+                listener.enterAdd_op(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitAdd_op"):
+                listener.exitAdd_op(self)
+
         def accept(self, visitor):
             if hasattr(visitor, "visitAdd_op"):
                 return visitor.visitAdd_op(self)
@@ -3138,6 +3434,14 @@ class SQLGramaticaParser ( Parser ):
 
         def getRuleIndex(self):
             return SQLGramaticaParser.RULE_mult_op
+
+        def enterRule(self, listener):
+            if hasattr(listener, "enterMult_op"):
+                listener.enterMult_op(self)
+
+        def exitRule(self, listener):
+            if hasattr(listener, "exitMult_op"):
+                listener.exitMult_op(self)
 
         def accept(self, visitor):
             if hasattr(visitor, "visitMult_op"):

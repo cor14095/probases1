@@ -1,5 +1,8 @@
 from flask import Flask, request,render_template
-import runSQL
+import sys
+#sys.path.append("C:/Users/Freddie/Documents/Desktop/dbTest/Front-end/antlr")
+sys.path.append("C:/Users/Freddie/Documents/Desktop/dbTest/Front-end/antlr")
+from jamon import hola
 app = Flask(__name__)
 
 @app.route("/")
@@ -8,8 +11,10 @@ def hello():
 
 @app.route("/main", methods=['GET', 'POST'])
 def test():
-	return runSQL.main()
+	data = str(request.args.get('datas'))
+	return hola(data)
 	
+
 @app.route("/createDb", methods=['GET', 'POST'])
 def createDb():
 	return render_template('createDb.html')
