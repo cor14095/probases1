@@ -70,7 +70,7 @@ def showDatabases():
 	return (next(os.walk('.'))[1])
 
 def createDatabase(databaseName):
-	newDatabaseDirectory = (r'./') + databaseName
+	newDatabaseDirectory = (r'./db/') + databaseName
 	if not os.path.exists(newDatabaseDirectory):
 		#Create directory
 		os.makedirs(newDatabaseDirectory)
@@ -78,7 +78,7 @@ def createDatabase(databaseName):
 		#Create metadata file
 		metadataFile = {}
 		metadataFile['tables'] = {}
-		with open('./'+databaseName+'/'+databaseName+'Metadata.json', 'w') as output:
+		with open('./db/'+databaseName+'/'+databaseName+'Metadata.json', 'w') as output:
 			json.dump(metadataFile, output)
 
 		return ("Database '"+databaseName+"' created succesfully.")
@@ -86,7 +86,7 @@ def createDatabase(databaseName):
 		return ('Database with name: "'+databaseName+'" already exists.')
 
 def dropDatabase(databaseName):
-	databaseDirectory = (r'./') + databaseName
+	databaseDirectory = (r'./db/') + databaseName
 	if not os.path.exists(databaseDirectory):
 		print("Database with name: "+databaseName+" doesnt exists.")
 	else:
@@ -94,7 +94,7 @@ def dropDatabase(databaseName):
 		print("Database "+databaseName+" succesfully deleted.")
 
 def useDatabase(databaseName):
-	databaseDirectory = (r'./') + databaseName
+	databaseDirectory = (r'./db/') + databaseName
 	if os.path.exists(databaseDirectory):
 		global currentDatabase
 		currentDatabase = databaseName
@@ -103,7 +103,7 @@ def useDatabase(databaseName):
 
 def showTables():
 	#Insert info in metadata file
-	input = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+	input = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 	metadata = json.load(input)
 	return metadata['tables'].keys()
 
@@ -112,7 +112,7 @@ FOREIGN_KEY = 1
 PRIMARY_KEY = 2
 # tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column1,'type':'int'},{'columnName':'column2', 'key':1, 'type':'date'}]}
 def createTable(tableSchema):
-	if not os.path.isfile('./'+currentDatabase+'/'+tableSchema['tableName']+'.json'):
+	if not os.path.isfile('./db/'+currentDatabase+'/'+tableSchema['tableName']+'.json'):
 		#Check if table contains at least one type of key
 		pkSum = 0
 		fkSum = 0
@@ -125,7 +125,7 @@ def createTable(tableSchema):
 				fkSum += 1
 
 				#Check if the constraint target table exists
-				if not os.path.isfile(r'./'+currentDatabase+'/'+column['constraintTable']+'.json'):
+				if not os.path.isfile(r'./db/'+currentDatabase+'/'+column['constraintTable']+'.json'):
 					print("Error, constraint target table: "+column['constraintTable']+" doesnt exists in database: "+currentDatabase)
 					return False
 
@@ -141,18 +141,18 @@ def createTable(tableSchema):
 
 
 		#Create file
-		file = open('./'+currentDatabase+'/'+tableSchema['tableName']+'.json', 'w')
+		file = open('./db/'+currentDatabase+'/'+tableSchema['tableName']+'.json', 'w')
 		file.write('{}')
 
 		#Create hash file
-		hashFile = open('./'+currentDatabase+'/'+tableSchema['tableName']+'.hash', 'w')
+		hashFile = open('./db/'+currentDatabase+'/'+tableSchema['tableName']+'.hash', 'w')
 		initialHash = {}
 		for column in tableSchema['columns']:
 			initialHash[column['columnName']] = {}
 		json.dump(initialHash, hashFile)
 
 		#Insert info in metadata file
-		input = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+		input = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 		metadata = json.load(input)
 		tempTables = metadata['tables']
 		tempTables[tableSchema['tableName']] = {}
@@ -162,7 +162,7 @@ def createTable(tableSchema):
 		metadata['tables'] = tempTables
 
 		#Write info in metadata file
-		with open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'w') as output:
+		with open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'w') as output:
 			json.dump(metadata, output)
 
 		print('Table succesfully created')
@@ -215,7 +215,7 @@ def checkConstraints(insertInfo, metadata, tableHash):
 				else:
 					#Check if it exists in the respective table
 					#Open table file
-					constraintTableFile = open(r'./'+currentDatabase+'/'+column['constraintTable']+'.hash', 'r')
+					constraintTableFile = open(r'./db/'+currentDatabase+'/'+column['constraintTable']+'.hash', 'r')
 					constraintTable = json.load(constraintTableFile)
 					#If it isnt
 					if not (value in constraintTable[column['constraintColumn']]):
@@ -244,7 +244,7 @@ def insertRecord(insertInfo):
 		return False
 
 	#Open metadata file
-	metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+	metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 	metadata = json.load(metadataFile)
 
 	#Check if table exists
@@ -258,7 +258,7 @@ def insertRecord(insertInfo):
 		return False
 
 	#Open hash file
-	tableHashFile = open('./'+currentDatabase+'/'+insertInfo['tableName']+'.hash', 'r')
+	tableHashFile = open('./db/'+currentDatabase+'/'+insertInfo['tableName']+'.hash', 'r')
 	tableHash = json.load(tableHashFile)
 
 	#Perform constraint check
@@ -286,7 +286,7 @@ def insertRecord(insertInfo):
 			resultingCSV += "NULL" + ","
 
 	#Write hash back to file
-	tableHashFile = open('./'+currentDatabase+'/'+insertInfo['tableName']+'.hash', 'w')
+	tableHashFile = open('./db/'+currentDatabase+'/'+insertInfo['tableName']+'.hash', 'w')
 	json.dump(tableHash, tableHashFile)
 
 	resultingCSV = resultingCSV[:-1]
@@ -294,7 +294,7 @@ def insertRecord(insertInfo):
 	
 
 	#Open table file
-	tableFile = open('./'+currentDatabase+'/'+insertInfo['tableName']+'.json', 'r')
+	tableFile = open('./db/'+currentDatabase+'/'+insertInfo['tableName']+'.json', 'r')
 
 	## VERSION LOADING JSON TO MEMORY ####################################################################################################
 	# #Load JSON
@@ -304,7 +304,7 @@ def insertRecord(insertInfo):
 	# tableJSON[metadata['tables'][insertInfo['tableName']]['lastIndex'] + 1] = resultingCSV
 
 	# #Write table file
-	# json.dump(tableJSON, open('./'+currentDatabase+'/'+insertInfo['tableName']+'.json', 'w'))
+	# json.dump(tableJSON, open('./db/'+currentDatabase+'/'+insertInfo['tableName']+'.json', 'w'))
 	######################################################################################################################################
 
 
@@ -318,7 +318,7 @@ def insertRecord(insertInfo):
 		newJSON = currentJSON[:-1] + '"' + str(metadata['tables'][insertInfo['tableName']]['lastIndex'] + 1) + '":"' + resultingCSV + '"}'
 	else:
 		newJSON = currentJSON[:-1] + ',"' + str(metadata['tables'][insertInfo['tableName']]['lastIndex'] + 1) + '":"' + resultingCSV + '"}'
-	tableFile = open('./'+currentDatabase+'/'+insertInfo['tableName']+'.json', 'w')
+	tableFile = open('./db/'+currentDatabase+'/'+insertInfo['tableName']+'.json', 'w')
 	tableFile.write(newJSON)
 	######################################################################################################################################
 	
@@ -327,7 +327,7 @@ def insertRecord(insertInfo):
 	metadata['tables'][insertInfo['tableName']]['lastIndex'] = metadata['tables'][insertInfo['tableName']]['lastIndex'] + 1
 
 	#Write metadata
-	json.dump(metadata, open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'w'))
+	json.dump(metadata, open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'w'))
 
 	# print('Insert successful.')
 	return True
@@ -351,12 +351,12 @@ def deleteIndexes(indexesToDelete, inputJson):
 
 # deleteInfoExample = {'tableName':'table1', 'indexes':[1,3]}
 def deleteRows(deleteInfo):
-	tableFile = open('./'+currentDatabase+'/'+deleteInfo['tableName']+'.json', 'r')
+	tableFile = open('./db/'+currentDatabase+'/'+deleteInfo['tableName']+'.json', 'r')
 	jsonFile = tableFile.readlines()[0]
 
 	newJson = deleteIndexes(deleteInfo['indexes'], jsonFile)
 
-	tableFileOutput = open('./'+currentDatabase+'/'+deleteInfo['tableName']+'.json', 'w')
+	tableFileOutput = open('./db/'+currentDatabase+'/'+deleteInfo['tableName']+'.json', 'w')
 	tableFileOutput.write(newJson)
 
 	return True
@@ -364,7 +364,7 @@ def deleteRows(deleteInfo):
 # Example call: cartesianProduct(['table1', 'table2', 'table3'])
 def cartesianProduct(tables):
 	#Open metadata file
-	metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+	metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 	metadata = json.load(metadataFile)
 
 
@@ -378,7 +378,7 @@ def cartesianProduct(tables):
 	data = []
 	for table in tables:
 		#Open table file
-		tableFile = open('./'+currentDatabase+'/'+table+'.json', 'r')
+		tableFile = open('./db/'+currentDatabase+'/'+table+'.json', 'r')
 		jsonFile = json.load(tableFile)
 		tempData = []
 		for key, value in jsonFile.items():
@@ -537,7 +537,7 @@ def filterOverCartesianProduct(tableSchema, tableData, operation, firstWhere, se
 def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
 	if(operation == "NULL"):
 		#Check type compatibility
-		metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+		metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 		metadata = json.load(metadataFile)
 
 		for column in metadata['tables'][tableName]['columns']:
@@ -560,7 +560,7 @@ def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
 			return False
 		
 		#Open table hash file
-		tableHashFile = open(r'./'+currentDatabase+'/'+tableName+'.hash', 'r')
+		tableHashFile = open(r'./db/'+currentDatabase+'/'+tableName+'.hash', 'r')
 		tableHash = json.load(tableHashFile)
 
 		#Get hash for specific column
@@ -617,7 +617,7 @@ def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
 		# print(rowIndexes)
 
 		#Open table data file
-		tableFile = open(r'./'+currentDatabase+'/'+tableName+'.json', 'r')
+		tableFile = open(r'./db/'+currentDatabase+'/'+tableName+'.json', 'r')
 		table = json.load(tableFile)
 
 		#Generate resulting set of rows
@@ -659,7 +659,7 @@ def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
 def filterOverSingleTableWithIndexes(tableName, operation, firstWhere, secondWhere):
 	if(operation == "NULL"):
 		#Check type compatibility
-		metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+		metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 		metadata = json.load(metadataFile)
 
 		for column in metadata['tables'][tableName]['columns']:
@@ -682,7 +682,7 @@ def filterOverSingleTableWithIndexes(tableName, operation, firstWhere, secondWhe
 			return False
 		
 		#Open table hash file
-		tableHashFile = open(r'./'+currentDatabase+'/'+tableName+'.hash', 'r')
+		tableHashFile = open(r'./db/'+currentDatabase+'/'+tableName+'.hash', 'r')
 		tableHash = json.load(tableHashFile)
 
 		#Get hash for specific column
@@ -739,7 +739,7 @@ def filterOverSingleTableWithIndexes(tableName, operation, firstWhere, secondWhe
 		# print(rowIndexes)
 
 		#Open table data file
-		tableFile = open(r'./'+currentDatabase+'/'+tableName+'.json', 'r')
+		tableFile = open(r'./db/'+currentDatabase+'/'+tableName+'.json', 'r')
 		table = json.load(tableFile)
 
 		#Generate resulting set of rows
@@ -824,7 +824,7 @@ def select(selectInfo):
 
 		#Perform SELECT, column selection
 		#Open metadata file
-		metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+		metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 		metadata = json.load(metadataFile)
 
 		selectedColumns = []
@@ -884,7 +884,7 @@ deleteInfoExample = {
 
 def delete(deleteInfo):
 	#Open metadata file
-	metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+	metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 	metadata = json.load(metadataFile)
 
 	#Check references to this table
@@ -896,7 +896,7 @@ def delete(deleteInfo):
 			if column['key'] == FOREIGN_KEY:
 				if column['constraintTable'] == deleteInfo['from'][0]:
 					#Load table hash to retrieve values in column
-					tableHashFile = open('./'+currentDatabase+'/'+tableName+'.hash', 'r')
+					tableHashFile = open('./db/'+currentDatabase+'/'+tableName+'.hash', 'r')
 					tableHash = json.load(tableHashFile)
 					referencedValues[column['constraintColumn']] = tableHash[column['columnName']].keys()
 
@@ -923,18 +923,18 @@ def delete(deleteInfo):
 
 	#Delete from table data
 	#Open table file
-	tableFile = open(r'./'+currentDatabase+'/'+deleteInfo['from'][0]+'.json', 'r')
+	tableFile = open(r'./db/'+currentDatabase+'/'+deleteInfo['from'][0]+'.json', 'r')
 	table = json.load(tableFile)
 	for indexToDelete in indexesToDelete:
 		table.pop(str(indexToDelete))
 
 	#Write back file data
-	tableFile = open(r'./'+currentDatabase+'/'+deleteInfo['from'][0]+'.json', 'w')
+	tableFile = open(r'./db/'+currentDatabase+'/'+deleteInfo['from'][0]+'.json', 'w')
 	json.dump(table, tableFile)
 
 	#Delete from hash
 	#Open table hash file
-	tableHashFile = open(r'./'+currentDatabase+'/'+deleteInfo['from'][0]+'.hash', 'r')
+	tableHashFile = open(r'./db/'+currentDatabase+'/'+deleteInfo['from'][0]+'.hash', 'r')
 	tableHash = json.load(tableHashFile)
 	for column, columnHash in tableHash.items():
 		for value, indexes in columnHash.items():
@@ -948,7 +948,7 @@ def delete(deleteInfo):
 				tableHash[column][value] = newIndexes
 
 	#Write back hash info
-	tableHashFile = open(r'./'+currentDatabase+'/'+deleteInfo['from'][0]+'.hash', 'w')
+	tableHashFile = open(r'./db/'+currentDatabase+'/'+deleteInfo['from'][0]+'.hash', 'w')
 	json.dump(tableHash, tableHashFile)
 	
 	print("Succesfully deleted "+str(len(indexesToDelete))+" rows.")
@@ -985,7 +985,7 @@ updateInfoExample = {
 '''
 def update(updateInfo):
 	#Open metadata file
-	metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+	metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 	metadata = json.load(metadataFile)
 
 	#Check if newValue can be casted to the type of the column it wants to set
@@ -1013,7 +1013,7 @@ def update(updateInfo):
 		if column['key'] == FOREIGN_KEY:
 			if column['columnName'] in updateInfo['columnsToUpdate']:
 				#Open constraint table hash
-				constraintTableFile = open(r'./'+currentDatabase+'/'+column['constraintTable']+'.hash', 'r')
+				constraintTableFile = open(r'./db/'+currentDatabase+'/'+column['constraintTable']+'.hash', 'r')
 				constraintTable = json.load(constraintTableFile)
 				if updateInfo['columnsToUpdate'][column['columnName']] not in constraintTable[column['constraintColumn']]:
 					print("Error, trying to update "+column['columnName']+" to "+updateInfo['columnsToUpdate'][column['columnName']]+" which doesnt exists yet as a primary key in constraint column "+column['constraintColumn']+" in constraint table "+column['constraintTable'])
@@ -1028,7 +1028,7 @@ def update(updateInfo):
 			if column['key'] == FOREIGN_KEY:
 				if column['constraintTable'] == updateInfo['tableName']:
 					#Load table hash to retrieve values in column
-					tableHashFile = open('./'+currentDatabase+'/'+tableName+'.hash', 'r')
+					tableHashFile = open('./db/'+currentDatabase+'/'+tableName+'.hash', 'r')
 					tableHash = json.load(tableHashFile)
 					referencedValues[column['constraintColumn']] = tableHash[column['columnName']].keys()
 
@@ -1044,11 +1044,11 @@ def update(updateInfo):
 	#If its all clear, proceed to update rows
 
 	#Open table file
-	tableFile = open(r'./'+currentDatabase+'/'+updateInfo['tableName']+'.json', 'r')
+	tableFile = open(r'./db/'+currentDatabase+'/'+updateInfo['tableName']+'.json', 'r')
 	table = json.load(tableFile)
 
 	#Open table hash file
-	tableHashFile = open(r'./'+currentDatabase+'/'+updateInfo['tableName']+'.hash', 'r')
+	tableHashFile = open(r'./db/'+currentDatabase+'/'+updateInfo['tableName']+'.hash', 'r')
 	tableHash = json.load(tableHashFile)
 	# print("Indexes to update:")
 	# print(indexesToUpdate)
@@ -1091,11 +1091,11 @@ def update(updateInfo):
 		table[indexToUpdate] = rowJoined
 
 	#Write back table file
-	tableFile = open(r'./'+currentDatabase+'/'+updateInfo['tableName']+'.json', 'w')
+	tableFile = open(r'./db/'+currentDatabase+'/'+updateInfo['tableName']+'.json', 'w')
 	json.dump(table, tableFile)
 
 	#Write back hash file
-	tableHashFile = open(r'./'+currentDatabase+'/'+updateInfo['tableName']+'.hash', 'w')
+	tableHashFile = open(r'./db/'+currentDatabase+'/'+updateInfo['tableName']+'.hash', 'w')
 	json.dump(tableHash, tableHashFile)
 
 	print("Succesfully updated "+str(len(indexesToUpdate))+" rows.")
@@ -1305,10 +1305,10 @@ updateInfoExample = {
 # print(showDatabases())
 
 # for i in range(10000):
-# 	tableFile = open('./'+currentDatabase+'/'+'table1'+'.json', 'r')
+# 	tableFile = open('./db/'+currentDatabase+'/'+'table1'+'.json', 'r')
 # 	table = json.load(tableFile)
 
 # 	print("Writing "+str(i))
-# 	tableFile = open('./'+currentDatabase+'/'+'table1'+'.json', 'w')
+# 	tableFile = open('./db/'+currentDatabase+'/'+'table1'+'.json', 'w')
 # 	json.dump(table, tableFile)
 
