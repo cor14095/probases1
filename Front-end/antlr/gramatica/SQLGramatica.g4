@@ -47,7 +47,7 @@ fragment LETTERX: 	('A'..'Z'|'a'..'z');
 fragment DIGITX: 		'0'..'9';
 fragment VARX: 			(' '..'~')| '\\' | '\t' | '\n' ;
 
-WS:					[ \t\r\n]+ -> channel ( HIDDEN ) ; //Whitespace declaration
+WS:[ \t\r\n]+ -> channel(HIDDEN); 
 
 IDX: LETTERX ( LETTERX | DIGITX | '_' )* ;
 NUMX: DIGITX ( DIGITX )*;
@@ -57,12 +57,11 @@ CHARS: LETTERX | DIGITX |' '| '!' | '"' | '#' | '$' | '%' | '&' | '\'' | '(' | '
 CHARX: '\'' CHARS '\'';
 STRING: '\'' CHARS ( CHARS )* '\'';
 
-SPACEX: (' '|'\n'|'\t'|'\f'|'\r\n'|'\r'){skip();};
 COMMENTX: '//'(~('\r'|'\n'))*{skip();};
 
-literal : IDX| NUMX| CHARX | fecha;
+literal : IDX| NUMX| CHARX | fecha | STRING;
 
-fecha:  DIGITX DIGITX DIGITX DIGITX '-'  DIGITX DIGITX '-'  DIGITX DIGITX ;
+fecha:  DIGITX DIGITX DIGITX DIGITX '-' DIGITX DIGITX '-' DIGITX DIGITX ;
 
 programa: database|(database)*;
 
@@ -113,19 +112,15 @@ foreignKey: IDX FOREIGN KEY '(' IDX (',' IDX)* ')' REFERENCES IDX '(' IDX (',' I
 
 check: IDX CHECK (exp);
 
-// Expression
-
-exp: expression ;
-
-expression : andExpr| expression OR andExpr  ;
-
-andExpr: eqExpr | andExpr AND eqExpr ;
-
-eqExpr: relationExpr | eqExpr eq_op relationExpr ;
-
-relationExpr: unaryExpr | relationExpr rel_op unaryExpr ;
-
-unaryExpr: '(' ( IDX | STRING | NUMX | CHARX ) ')' | NOT '(' expression ')' ;
+//---------------------Operator Priority-------------------------//
+exp 				: '(' orExpression ')' | ;
+orExpression 		: andExpression | orExpression OR andExpression;
+andExpression 		: equalsExpression | andExpression AND equalsExpression;
+equalsExpression 	: relationExpression | equalsExpression eq_op relationExpression;
+relationExpression 	: addSubsExpression | relationExpression rel_op addSubsExpression;
+addSubsExpression 	: mulDivExpression | addSubsExpression add_op mulDivExpression;
+mulDivExpression 	: basicExpression | mulDivExpression mult_op basicExpression;
+basicExpression 	: '(' orExpression ')' | literal | NOT '(' orExpression ')';
 
 alterTable: ALTER TABLE IDX RENAME TO IDX | ALTER TABLE IDX action (',' action)* ;
 
@@ -157,10 +152,7 @@ sep: '*' | IDX(',' IDX)*;
 
 // Operadores rel y eq
 
-rel_op: '<' | '>' | '<=' | '>='| '=';
-
+rel_op: '<' | '>' | '<=' | '>='| '=' ;
 eq_op : '==' | '!=' ;
-
 add_op: '+'| '-';
-
 mult_op: '*' | '/' | '%' ;
