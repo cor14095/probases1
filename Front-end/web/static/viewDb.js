@@ -1,5 +1,8 @@
 jQuery(document).ready(function(){
-	var path = "../static/data.csv";
+	var path = "../../../antlr/output/data.csv";
+	//the following is the wrong way
+	var path = "../static/data.csv"
+
 	csv2Table(path);
 });
 

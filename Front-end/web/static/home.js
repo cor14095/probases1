@@ -15,7 +15,7 @@ function showDb(){
 	jQuery.ajax({
 		type: 'GET',
 		contentType: "application/xml; charset=utf-8",
-		url: "/main",
+		url: "/showDb",
 		data: {'datas':"show databases"},
    		success: function(response) {
    			console.log(response);
