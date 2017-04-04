@@ -8,66 +8,8 @@ import shutil
 
 currentDatabase = ''
 
-def generateExampleCSV():
-	with open('example.csv', 'w') as output:
-		for i in range(1000000):
-			tempRow = str(random.randint(0,30))
-			for j in range(10):
-				tempRow += ','+str(random.randint(0,30))
-			tempRow += '\n'
-			output.write(tempRow)
-
-def generateDictionary(tableName):
-	columns = getColumns(tableName)
-	dictionaries = {}
-	for i in range(len(columns)):
-		dictionaries[i] = {}
-	with open(tableName+'.csv') as tableFile:
-		reader = csv.reader(tableFile)
-		rowCounter = 0
-		for row in reader:
-			for i in range(len(columns)):
-				if(row[i] in dictionaries[i]):
-					tempRowIndexes = dictionaries[i][row[i]]
-					tempRowIndexes.append(rowCounter)
-					dictionaries[i][row[i]] = tempRowIndexes
-				else:
-					dictionaries[i][row[i]] = [rowCounter]
-			rowCounter += 1
-	with open(tableName+'Dictionary.json', 'w') as output:
-		json.dump(dictionaries, output)
-
-def getColumns(tableName):
-	with open(tableName+'.csv') as tableFile:
-		reader = csv.reader(tableFile)
-		columns = next(reader)
-		# print(columns)
-		return columns
-
-def getData(tableName, columns):
-	result = []
-	with open(tableName+'.csv') as tableFile:
-		reader = csv.reader(tableFile)
-		for row in reader:
-			tempRow = []
-			for column in columns:
-				tempRow.append(row[column])
-			result.append(tempRow)
-	return result
-
-def dumbSearch(rowQuery):
-	result = []
-	with open('example.csv') as tableFile:
-		reader = csv.reader(tableFile)
-		rowCounter = 0
-		for row in reader:
-			if row[0] == rowQuery:
-				result.append(rowCounter)
-			rowCounter += 1
-	return result
-
 def showDatabases():
-	return (next(os.walk('.'))[1])
+	return (next(os.walk('./db'))[1])
 
 def createDatabase(databaseName):
 	newDatabaseDirectory = (r'./db/') + databaseName
@@ -88,20 +30,21 @@ def createDatabase(databaseName):
 def dropDatabase(databaseName):
 	databaseDirectory = (r'./db/') + databaseName
 	if not os.path.exists(databaseDirectory):
-		print("Database with name: "+databaseName+" doesnt exists.")
+		return ("Database with name: "+databaseName+" doesnt exists.")
 	else:
 		shutil.rmtree(databaseDirectory)
-		print("Database "+databaseName+" succesfully deleted.")
+		return ("Database "+databaseName+" succesfully deleted.")
 
 def useDatabase(databaseName):
 	databaseDirectory = (r'./db/') + databaseName
 	if os.path.exists(databaseDirectory):
 		global currentDatabase
 		currentDatabase = databaseName
+		return ("Changed to database: ")
 	else:
-		print('Database with name: "'+databaseName+'" doesnt exists.')
+		return ('Database with name: "'+databaseName+'" doesnt exists.')
 
-def showTables():
+def showTables(currentDatabase):
 	#Insert info in metadata file
 	input = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 	metadata = json.load(input)
@@ -111,7 +54,7 @@ NO_KEY = 0
 FOREIGN_KEY = 1
 PRIMARY_KEY = 2
 # tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column1,'type':'int'},{'columnName':'column2', 'key':1, 'type':'date'}]}
-def createTable(tableSchema):
+def createTable(tableSchema, currentDatabase):
 	if not os.path.isfile('./db/'+currentDatabase+'/'+tableSchema['tableName']+'.json'):
 		#Check if table contains at least one type of key
 		pkSum = 0
@@ -126,17 +69,17 @@ def createTable(tableSchema):
 
 				#Check if the constraint target table exists
 				if not os.path.isfile(r'./db/'+currentDatabase+'/'+column['constraintTable']+'.json'):
-					print("Error, constraint target table: "+column['constraintTable']+" doesnt exists in database: "+currentDatabase)
+					return ("Error, constraint target table: "+column['constraintTable']+" doesnt exists in database: "+currentDatabase)
 					return False
 
 		#Table cannot have more than one primary key
 		if(pkSum)>1:
-			print("Error, table cannot have more than one primary key.")
+			return ("Error, table cannot have more than one primary key.")
 			return False
 
 		#Table has to have at least one type of key
 		if((pkSum+fkSum) < 1):
-			print("Error, table needs at least one type of key.")
+			return ("Error, table needs at least one type of key.")
 			return False
 
 
@@ -165,9 +108,9 @@ def createTable(tableSchema):
 		with open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'w') as output:
 			json.dump(metadata, output)
 
-		print('Table succesfully created')
+		return ('Table succesfully created')
 	else:
-		print('Table with name: '+tableSchema['tableName']+' already exists.')
+		return ('Table with name: '+tableSchema['tableName']+' already exists.')
 
 def getType(columnName, tableName, metadata):
 	columnsInTable = metadata['tables'][tableName]['columns']
@@ -202,7 +145,7 @@ def checkTypes(insertInfo, metadata):
 				return False
 	return True
 
-def checkConstraints(insertInfo, metadata, tableHash):
+def checkConstraints(insertInfo, metadata, tableHash, currentDatabase):
 	#Traverse every column in the table
 	for column in metadata['tables'][insertInfo['tableName']]['columns']:
 		value = insertInfo['values'][insertInfo['columns'].index(column['columnName'])]
@@ -211,7 +154,7 @@ def checkConstraints(insertInfo, metadata, tableHash):
 			try:
 				if value == "NULL":
 					#It cannot be NULL
-					print("Error, column: "+column['columnName']+" cannot be NULL, as it is a foreign key.")
+					return ("Error, column: "+column['columnName']+" cannot be NULL, as it is a foreign key.")
 				else:
 					#Check if it exists in the respective table
 					#Open table file
@@ -219,28 +162,28 @@ def checkConstraints(insertInfo, metadata, tableHash):
 					constraintTable = json.load(constraintTableFile)
 					#If it isnt
 					if not (value in constraintTable[column['constraintColumn']]):
-						print("Error, "+str(value)+" in column "+column['columnName']+" doesnt exist in constraint table "+column['constraintTable']+" yet.")
+						return ("Error, "+str(value)+" in column "+column['columnName']+" doesnt exist in constraint table "+column['constraintTable']+" yet.")
 						return False
 			except:
 				#It has to come in the insertion statement
-				print("Error, column: "+column['columnName']+" is required, as it is a foreign key.")
+				return ("Error, column: "+column['columnName']+" is required, as it is a foreign key.")
 				return False
 
 		#If column is primary key then check if its unique in the respective table
 		elif column['key'] == PRIMARY_KEY:
 			# print("Value: "+str(value)+" column "+column['columnName'])
 			if str(value) in tableHash[column['columnName']]:
-				print("Error, primary key "+str(value)+" already exists in column: "+column['columnName'])
+				return ("Error, primary key "+str(value)+" already exists in column: "+column['columnName'])
 				return False
 
 	#If all the columns are good then return True
 	return True
 
 # insertInfoExample = {'tableName': 'table1', 'columns':['id','nombre','edad'], 'values':[1, 'Perry', 20]}
-def insertRecord(insertInfo):
+def insertRecord(insertInfo, currentDatabase):
 	#Perform parity check
 	if(len(insertInfo['columns']) != len(insertInfo['values'])):
-		print 'Error, values quantity doesnt match columns quantity'
+		return ('Error, values quantity doesnt match columns quantity')
 		return False
 
 	#Open metadata file
@@ -249,12 +192,12 @@ def insertRecord(insertInfo):
 
 	#Check if table exists
 	if insertInfo['tableName'] not in metadata['tables']:
-		print("Error, table: "+insertInfo['tableName']+" doesnt exists in database: "+currentDatabase)
+		return ("Error, table: "+insertInfo['tableName']+" doesnt exists in database: "+currentDatabase)
 		return False
 
 	#Perform type checks
 	if(checkTypes(insertInfo, metadata) != True):
-		print 'Error, types dont match with the table types.'
+		return ('Error, types dont match with the table types.')
 		return False
 
 	#Open hash file
@@ -262,8 +205,9 @@ def insertRecord(insertInfo):
 	tableHash = json.load(tableHashFile)
 
 	#Perform constraint check
-	if(checkConstraints(insertInfo, metadata, tableHash) != True):
-		return False
+	constraintCheck = checkConstraints(insertInfo, metadata, tableHash, currentDatabase)
+	if(constraintCheck != True):
+		return constraintCheck
 
 
 	#Construct key-value pair to insert to table json file and store index in hash
@@ -329,12 +273,12 @@ def insertRecord(insertInfo):
 	#Write metadata
 	json.dump(metadata, open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'w'))
 
-	# print('Insert successful.')
+	return ('Insert successful.')
 	return True
 
 def deleteIndexes(indexesToDelete, inputJson):
 	for indexToDelete in indexesToDelete:
-		print("\nDeleting index: "+str(indexToDelete))
+		# print("\nDeleting index: "+str(indexToDelete))
 		firstRegex = r'{"' + str(indexToDelete) + r'":"[^"]*",'
 		inputJson = re.sub(firstRegex, '{', inputJson)
 
@@ -350,7 +294,7 @@ def deleteIndexes(indexesToDelete, inputJson):
 	return inputJson
 
 # deleteInfoExample = {'tableName':'table1', 'indexes':[1,3]}
-def deleteRows(deleteInfo):
+def deleteRows(deleteInfo, currentDatabase):
 	tableFile = open('./db/'+currentDatabase+'/'+deleteInfo['tableName']+'.json', 'r')
 	jsonFile = tableFile.readlines()[0]
 
@@ -362,7 +306,7 @@ def deleteRows(deleteInfo):
 	return True
 
 # Example call: cartesianProduct(['table1', 'table2', 'table3'])
-def cartesianProduct(tables):
+def cartesianProduct(tables, currentDatabase):
 	#Open metadata file
 	metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 	metadata = json.load(metadataFile)
@@ -371,7 +315,7 @@ def cartesianProduct(tables):
 	#Check existence of all tables
 	for table in tables:
 		if not (table in metadata['tables']):
-			print("Table: "+table+" doesnt exist in database: "+currentDatabase)
+			print ("Table: "+table+" doesnt exist in database: "+currentDatabase)
 			return False
 
 	#Load all tables involved
@@ -534,7 +478,7 @@ def filterOverCartesianProduct(tableSchema, tableData, operation, firstWhere, se
 
 		return firstWhereResults
 
-def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
+def filterOverSingleTable(tableName, operation, firstWhere, secondWhere, currentDatabase):
 	if(operation == "NULL"):
 		#Check type compatibility
 		metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
@@ -632,8 +576,8 @@ def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
 
 	elif(operation == "AND"):
 		#Filter childs
-		firstWhereResults = filterOverSingleTable(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
-		secondWhereResults = filterOverSingleTable(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+		firstWhereResults = filterOverSingleTable(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'], currentDatabase)
+		secondWhereResults = filterOverSingleTable(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'], currentDatabase)
 
 		#AND results of childs
 		resultData = []
@@ -646,8 +590,8 @@ def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
 
 	elif(operation == "OR"):
 		#Filter childs
-		firstWhereResults = filterOverSingleTable(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
-		secondWhereResults = filterOverSingleTable(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+		firstWhereResults = filterOverSingleTable(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'], currentDatabase)
+		secondWhereResults = filterOverSingleTable(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'], currentDatabase)
 
 		#OR results of childs
 		for result in secondWhereResults:
@@ -656,7 +600,7 @@ def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
 
 		return firstWhereResults
 
-def filterOverSingleTableWithIndexes(tableName, operation, firstWhere, secondWhere):
+def filterOverSingleTableWithIndexes(tableName, operation, firstWhere, secondWhere, currentDatabase):
 	if(operation == "NULL"):
 		#Check type compatibility
 		metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
@@ -756,8 +700,8 @@ def filterOverSingleTableWithIndexes(tableName, operation, firstWhere, secondWhe
 
 	elif(operation == "AND"):
 		#Filter childs
-		firstWhereIndexes, firstWhereResults = filterOverSingleTableWithIndexes(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
-		secondWhereIndexes, secondWhereResults = filterOverSingleTableWithIndexes(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+		firstWhereIndexes, firstWhereResults = filterOverSingleTableWithIndexes(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'], currentDatabase)
+		secondWhereIndexes, secondWhereResults = filterOverSingleTableWithIndexes(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'], currentDatabase)
 
 		#AND indexes of childs
 		rowIndexes = []
@@ -775,8 +719,8 @@ def filterOverSingleTableWithIndexes(tableName, operation, firstWhere, secondWhe
 
 	elif(operation == "OR"):
 		#Filter childs
-		firstWhereIndexes, firstWhereResults = filterOverSingleTableWithIndexes(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
-		secondWhereIndexes, secondWhereResults = filterOverSingleTableWithIndexes(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+		firstWhereIndexes, firstWhereResults = filterOverSingleTableWithIndexes(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'], currentDatabase)
+		secondWhereIndexes, secondWhereResults = filterOverSingleTableWithIndexes(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'], currentDatabase)
 
 		#OR indexes of childs
 		for index in secondWhereIndexes:
@@ -790,11 +734,11 @@ def filterOverSingleTableWithIndexes(tableName, operation, firstWhere, secondWhe
 
 		return firstWhereIndexes, firstWhereResults
 
-def select(selectInfo):
+def select(selectInfo, currentDatabase):
 	#Check if cartesian product is needed
 	if(len(selectInfo['from']) > 1):
 		#Perform FROM, cartesian product
-		cartesianProductSchema, cartesianProductResult = cartesianProduct(selectInfo['from'])
+		cartesianProductSchema, cartesianProductResult = cartesianProduct(selectInfo['from'], currentDatabase)
 
 		#Perform WHERE, row filtering
 		filterResult = filterOverCartesianProduct(cartesianProductSchema, cartesianProductResult, selectInfo['where']['operation'], selectInfo['where']['firstWhere'], selectInfo['where']['secondWhere'])
@@ -820,7 +764,7 @@ def select(selectInfo):
 	else:
 		#Continue select using the hash
 		#Perform WHERE, row filtering
-		filterResult = filterOverSingleTable(selectInfo['from'][0], selectInfo['where']['operation'], selectInfo['where']['firstWhere'], selectInfo['where']['secondWhere'])
+		filterResult = filterOverSingleTable(selectInfo['from'][0], selectInfo['where']['operation'], selectInfo['where']['firstWhere'], selectInfo['where']['secondWhere'], currentDatabase)
 
 		#Perform SELECT, column selection
 		#Open metadata file
@@ -882,7 +826,7 @@ deleteInfoExample = {
 }
 '''
 
-def delete(deleteInfo):
+def delete(deleteInfo, currentDatabase):
 	#Open metadata file
 	metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 	metadata = json.load(metadataFile)
@@ -903,7 +847,7 @@ def delete(deleteInfo):
 	# print(referencedValues)
 
 	#Perform WHERE, generate indexes to be deleted in table
-	indexesToDelete, rowsToDelete = filterOverSingleTableWithIndexes(deleteInfo['from'][0], deleteInfo['where']['operation'], deleteInfo['where']['firstWhere'], deleteInfo['where']['secondWhere'])
+	indexesToDelete, rowsToDelete = filterOverSingleTableWithIndexes(deleteInfo['from'][0], deleteInfo['where']['operation'], deleteInfo['where']['firstWhere'], deleteInfo['where']['secondWhere'], currentDatabase)
 
 	# print(rowsToDelete)
 
@@ -983,7 +927,7 @@ updateInfoExample = {
 	}
 }
 '''
-def update(updateInfo):
+def update(updateInfo, currentDatabase):
 	#Open metadata file
 	metadataFile = open('./db/'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
 	metadata = json.load(metadataFile)
@@ -1033,7 +977,7 @@ def update(updateInfo):
 					referencedValues[column['constraintColumn']] = tableHash[column['columnName']].keys()
 
 	#Perform WHERE, generate indexes to be updated in table
-	indexesToUpdate, rowsToUpdate = filterOverSingleTableWithIndexes(updateInfo['tableName'], updateInfo['where']['operation'], updateInfo['where']['firstWhere'], updateInfo['where']['secondWhere'])
+	indexesToUpdate, rowsToUpdate = filterOverSingleTableWithIndexes(updateInfo['tableName'], updateInfo['where']['operation'], updateInfo['where']['firstWhere'], updateInfo['where']['secondWhere'], currentDatabase)
 
 	#Check if we're attempting to update a referenced value in a row
 	for columnName, values in referencedValues.items():
@@ -1201,6 +1145,10 @@ selectInfo = {
 
 print(select(selectInfo))
 '''
+selectInfo = {}
+selectInfo['select'] = ['column2', 'column1']
+selectInfo['where'] = {}
+selectInfo['operation'] = '<'
 
 selectInfo = {
 	'select':['column2','column1'],
@@ -1302,7 +1250,7 @@ updateInfoExample = {
 
 # update(updateInfoExample)
 
-# print(showDatabases())
+print(showDatabases())
 
 # for i in range(10000):
 # 	tableFile = open('./db/'+currentDatabase+'/'+'table1'+'.json', 'r')
