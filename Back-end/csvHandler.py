@@ -4,6 +4,7 @@ import random
 import os
 import re
 import itertools
+import shutil
 
 currentDatabase = ''
 
@@ -79,8 +80,18 @@ def createDatabase(databaseName):
 		metadataFile['tables'] = {}
 		with open('./'+databaseName+'/'+databaseName+'Metadata.json', 'w') as output:
 			json.dump(metadataFile, output)
+
+		return ("Database '"+databaseName+"' created succesfully.")
 	else:
-		print('Database with name: "'+databaseName+'" already exists.')
+		return ('Database with name: "'+databaseName+'" already exists.')
+
+def dropDatabase(databaseName):
+	databaseDirectory = (r'./') + databaseName
+	if not os.path.exists(databaseDirectory):
+		print("Database with name: "+databaseName+" doesnt exists.")
+	else:
+		shutil.rmtree(databaseDirectory)
+		print("Database "+databaseName+" succesfully deleted.")
 
 def useDatabase(databaseName):
 	databaseDirectory = (r'./') + databaseName
@@ -89,6 +100,12 @@ def useDatabase(databaseName):
 		currentDatabase = databaseName
 	else:
 		print('Database with name: "'+databaseName+'" doesnt exists.')
+
+def showTables():
+	#Insert info in metadata file
+	input = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+	metadata = json.load(input)
+	return metadata['tables'].keys()
 
 NO_KEY = 0
 FOREIGN_KEY = 1
@@ -792,7 +809,7 @@ def select(selectInfo):
 
 		# print(selectedColumns)
 
-		finalResult = []
+		finalResult = [selectInfo['select']]
 		for row in filterResult:
 			tempRow = []
 			for column in selectedColumns:
@@ -817,7 +834,7 @@ def select(selectInfo):
 					selectedColumns.append(i)
 
 
-		finalResult = []
+		finalResult = [selectInfo['select']]
 		for row in filterResult:
 			tempRow = []
 			for column in selectedColumns:
@@ -1103,43 +1120,34 @@ def update(updateInfo):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 # Testing area
 
-createDatabase('database1')
+# dropDatabase('database1')
+
+# createDatabase('database1')
 
 useDatabase('database1')
 
-tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column3', 'key':2, 'type':'date'},{'columnName':'column4', 'key':0, 'type':'string'}]}
-createTable(tableSchemaExample)
+print(showTables())
 
-tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column3', 'type':'date'},{'columnName':'column2', 'key':0, 'type':'int'}]}
-createTable(tableSchemaExample)
+# tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column3', 'key':2, 'type':'date'},{'columnName':'column4', 'key':0, 'type':'string'}]}
+# createTable(tableSchemaExample)
 
-print("Inserting into table 2")
-insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
-print("Inserting into table 2")
-insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
+# tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column3', 'type':'date'},{'columnName':'column2', 'key':0, 'type':'int'}]}
+# createTable(tableSchemaExample)
 
-print("Inserting into table 2")
-insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['24-24-2424', 'Alejandro Cortes']})
+# print("Inserting into table 2")
+# insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
 
-print("Inserting into table 1")
-insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[12, '12-12-1212']})
-print("Inserting into table 1")
-insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[15, '12-12-1212']})
-print("Inserting into table 1")
-insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[19, '12-12-1212']})
+# print("Inserting into table 2")
+# insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['24-24-2424', 'Alejandro Cortes']})
+
+# print("Inserting into table 1")
+# insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[12, '12-12-1212']})
+# print("Inserting into table 1")
+# insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[15, '12-12-1212']})
+# print("Inserting into table 1")
+# insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[19, '12-12-1212']})
 
 # print("Inserting into table 1")
 # insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[24, '12-12-1212']})
@@ -1147,9 +1155,9 @@ insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':
 # print("Inserting into table 1")
 # insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[36, '12-12-1212']})
 
-for i in range(150):
-	print("Inserting into table 1: "+str(i))
-	insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[100, '12-12-1212']})
+# for i in range(1000):
+# 	print("Inserting into table 1: "+str(i))
+# 	insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[random.randint(0,50), '12-12-1212']})
 
 
 '''
@@ -1193,9 +1201,9 @@ selectInfo = {
 
 print(select(selectInfo))
 '''
-'''
+
 selectInfo = {
-	'select':['column2'],
+	'select':['column2','column1'],
 	'from':['table1'],
 	'where':{
 		'operation':'OR',
@@ -1204,7 +1212,7 @@ selectInfo = {
 			'firstWhere':{
 				'operation':'=',
 				'constraintColumn':'column2',
-				'compareTo':666
+				'compareTo':50
 			},
 			'secondWhere':{}
 		},
@@ -1232,42 +1240,42 @@ selectInfo = {
 	}
 }
 
-print(select(selectInfo))
-'''
-'''
+# print(select(selectInfo))
+
+
 deleteInfoExample = {
 	'from':['table1'],
 	'where':{
-		'operation':'OR',
+		'operation':'AND',
 		'firstWhere':{
 			'operation':'NULL',
 			'firstWhere':{
-				'operation':'>',
+				'operation':'=',
 				'constraintColumn':'column2',
-				'compareTo':20
+				'compareTo':666
 			},
 			'secondWhere':{}
 		},
 		'secondWhere':{
 			'operation':'NULL',
 			'firstWhere':{
-				'operation':'<',
+				'operation':'=',
 				'constraintColumn':'column2',
-				'compareTo':10
+				'compareTo':666
 			},
 			'secondWhere':{}
 		}
 	}
 }
 
-delete(deleteInfoExample)
-'''
+# delete(deleteInfoExample)
+
 
 updateInfoExample = {
 	'tableName':'table1',
 	'columnsToUpdate':{
-		'column1':'99-99-9999',
-		'column2':'lele'
+		'column1':'24-24-2424',
+		'column2':666
 	},
 	'where':{
 		'operation':'AND',
@@ -1275,8 +1283,8 @@ updateInfoExample = {
 			'operation':'NULL',
 			'firstWhere':{
 				'operation':'=',
-				'constraintColumn':'column3',
-				'compareTo':'12-12-1212'
+				'constraintColumn':'column2',
+				'compareTo':100
 			},
 			'secondWhere':{}
 		},
@@ -1284,14 +1292,23 @@ updateInfoExample = {
 			'operation':'NULL',
 			'firstWhere':{
 				'operation':'=',
-				'constraintColumn':'column3',
-				'compareTo':'12-12-1212'
+				'constraintColumn':'column2',
+				'compareTo':100
 			},
 			'secondWhere':{}
 		}
 	}
 }
 
-update(updateInfoExample)
+# update(updateInfoExample)
 
 # print(showDatabases())
+
+# for i in range(10000):
+# 	tableFile = open('./'+currentDatabase+'/'+'table1'+'.json', 'r')
+# 	table = json.load(tableFile)
+
+# 	print("Writing "+str(i))
+# 	tableFile = open('./'+currentDatabase+'/'+'table1'+'.json', 'w')
+# 	json.dump(table, tableFile)
+
