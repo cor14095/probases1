@@ -1126,9 +1126,9 @@ def update(updateInfo):
 
 # createDatabase('database1')
 
-useDatabase('database1')
+# useDatabase('database1')
 
-print(showTables())
+# print(showTables())
 
 # tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column3', 'key':2, 'type':'date'},{'columnName':'column4', 'key':0, 'type':'string'}]}
 # createTable(tableSchemaExample)
