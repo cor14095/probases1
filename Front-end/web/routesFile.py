@@ -2,7 +2,7 @@ from flask import Flask, request,render_template
 import sys
 #sys.path.append("C:/Users/Freddie/Documents/Desktop/dbTest/Front-end/antlr")
 sys.path.append("../antlr")
-import jamon
+import runSQL
 
 app = Flask(__name__)
 
@@ -17,9 +17,9 @@ def showOptions():
 	data = str(request.args.get('datas'))
 	with open("../antlr/input/input.sql","w") as text_file:
 			text_file.write(data)
-	jamon.test("../antlr/input/input.sql")
+	runSQL.runSQL("../antlr/input/input.sql")
 	return "s"
-	
+
 
 @app.route("/createDb", methods=['GET', 'POST'])
 def createDb():
@@ -39,7 +39,7 @@ def viewDb():
 			currentDB = querys[querys.index("use ") + len("use "):]
 			if(currentDB.endswith(';')):
 				currentDB = currentDB[:-1]
-			
+
 	elif(loadDb):
 		currentDB = loadDb
 	elif(newDB):
