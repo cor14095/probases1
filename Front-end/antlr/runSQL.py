@@ -46,7 +46,36 @@ class SQLGramaticaPrintListener(SQLGramaticaListener):
             if (ctxChild.getChildCount() == 1):
                 # This is a opTable
                 print "opTable: " + ctxChild.getText()
-                # Late work...
+                # Got down 1 more to get the actual content.
+                ctxChild = ctxChild.getChild(0)
+                # Get the first child of each query.
+                qType = ctxChild.getChild(0).getText()
+                print qType
+                # Create a last outout message
+                lastMsg = ""
+                # Check what to do:
+                if (qType.upper() == "CREATE"):
+                    # CREATE comand
+                    createJson = {}
+                    createJson["tableName"] = ctxChild.getChild(2).getText()
+                    # I need to know what is pk and fk.
+                    # Find pks.
+                    cCount = 0
+                    while (ctxChild.getChild(cCount).getText != "CONSTRAINT"):
+                        cCount += 1
+                    # Now pkCount is at the first CONSTRAINT.
+                    while (ctxChild.getChild(pkCount).getText() != ")"):
+                        
+                        cCount += 2
+                    colums = []
+                    colCount = 4
+                    while (ctxChild.getChild(colCount).getText != "CONSTRAINT"):
+                        col = {}
+                        col["columnName"] = ctxChild.getChild(colCount).getText()
+                        col["key"] = ctxChild.getChild(colCount)
+                else:
+                    msg = "Unkown querry - " + ctxChild.getText()
+                    addOutput(msg)
             else:
                 # This is not an opTable
                 #print "notOPTable: " + ctxChild.getText()
