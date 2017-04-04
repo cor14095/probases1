@@ -33,7 +33,6 @@ class SQLGramaticaListener(ParseTreeListener):
 
     # Enter a parse tree produced by SQLGramaticaParser#database.
     def enterDatabase(self, ctx):
-        print("Hello: %s" % ctx.ID )
         pass
 
     # Exit a parse tree produced by SQLGramaticaParser#database.
@@ -345,3 +344,5 @@ class SQLGramaticaListener(ParseTreeListener):
     # Exit a parse tree produced by SQLGramaticaParser#mult_op.
     def exitMult_op(self, ctx):
         pass
+
+

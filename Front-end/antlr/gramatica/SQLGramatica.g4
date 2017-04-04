@@ -47,7 +47,7 @@ fragment LETTERX: 	('A'..'Z'|'a'..'z');
 fragment DIGITX: 		'0'..'9';
 fragment VARX: 			(' '..'~')| '\\' | '\t' | '\n' ;
 
-WS:[ \t\r\n]+ -> channel(HIDDEN); 
+WS:[ \t\r\n]+ -> channel(HIDDEN);
 
 IDX: LETTERX ( LETTERX | DIGITX | '_' )* ;
 NUMX: DIGITX ( DIGITX )*;
@@ -102,7 +102,7 @@ opTable:
 
 tipo: INT|FLOAT|DATE|CHAR '('NUMX ')' ;
 
-createTable: CREATE TABLE IDX '(' IDX tipo (',' IDX tipo)* (CONSTRAINT constraint (',' CONSTRAINT constraint)*)? ')';
+createTable: CREATE TABLE IDX '(' IDX tipo (',' IDX tipo)*  ( ',' CONSTRAINT constraint (',' CONSTRAINT constraint)*)? ')';
 
 constraint: primaryKey | foreignKey(foreignKey)* | check(check)*;
 
