@@ -7,7 +7,7 @@
 
 		<div id="cont">
 			<p id="title">Ver Base de datos</p>
-			<form action="viewDb">
+			<form method="POST" action="viewDb">
 				<p id="querys">Querys</p>
 				<textarea name="querys"></textarea>
 				<div id="table"></div>
@@ -15,8 +15,19 @@
 				<div class="clear">
 				</div>
 			</form>
+			<p id="title-errors">Errores</p>
+			<div id="errors">
+				{{ errors }}
+			</div>
 		</div>
-
+		
+		<form action="home">
+			<button>
+				<div id="home">
+					HOME
+				</div>
+			</button>
+		</form>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://d3js.org/d3.v4.js"></script>

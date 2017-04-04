@@ -79,3 +79,19 @@ td {
 	border: 1px black solid;
 	padding: 5px;
 }
+#errors{
+	width: 74%;
+	height: 15%;
+	background-color: white;
+	margin-top: 0;
+
+}
+#title-errors{
+	text-align: center;
+	color: black;
+	background-color: wheat;
+	font-size: 24px;
+	margin-top: 50px;
+	width: 74%;
+	margin-bottom: 0;
+}

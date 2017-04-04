@@ -7,7 +7,9 @@ import runSQL
 app = Flask(__name__)
 
 currentDB = ""
+errors = ""
 
+@app.route('/home')
 @app.route("/")
 def hello():
     return  render_template('home.html')
@@ -17,8 +19,9 @@ def showOptions():
 	data = str(request.args.get('datas'))
 	with open("../antlr/input/input.sql","w") as text_file:
 			text_file.write(data)
-	runSQL.runSQL("../antlr/input/input.sql")
-	return "s"
+	runSQL.runSQL("../antlr/input/input.sql",currentDB)
+	return 
+
 
 
 @app.route("/createDb", methods=['GET', 'POST'])
@@ -28,10 +31,13 @@ def createDb():
 
 @app.route("/viewDb", methods=['GET', 'POST'])
 def viewDb():
-	loadDb = request.args.get('file')
-	newDB = request.args.get('newDB')
-	querys = request.args.get('querys')
-
+	
+	if(request.method == 'POST'):
+		querys = request.form['querys']
+	else:
+		querys = request.args.get('querys')
+		loadDb = request.args.get('file')
+		newDB = request.args.get('newDB')
 	if(querys):
 		with open("../antlr/input/input.sql","w") as text_file:
 			text_file.write(querys)
@@ -48,8 +54,11 @@ def viewDb():
 		currentDB = newDB.rsplit(None,1)[-1]
 		if(currentDB.endswith(';')):
 			currentDB = currentDB[:-1]
-		print currentDB
-	return render_template('viewDb.html')
+		#print currentDB
+
+	errors = runSQL.runSQL("../antlr/input/input.sql",currentDB)
+	
+	return render_template('viewDb.html',errors = errors)
 
 if __name__ == "__main__":
     app.run()
