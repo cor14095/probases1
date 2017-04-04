@@ -1,7 +1,7 @@
 jQuery(document).ready(function(){
 	jQuery("#file").on("change",function(){isFileLoaded();});
-	//showDb();
-	insertOptions("no");
+	showDb();
+	//insertOptions("no");
 });
 
 function isFileLoaded(){
@@ -13,10 +13,10 @@ function isFileLoaded(){
 
 function showDb(){
 	jQuery.ajax({
-		type: 'POST',
+		type: 'GET',
 		contentType: "application/xml; charset=utf-8",
-		url: "main",
-		data: "show databases",
+		url: "/main",
+		data: {'datas':"show databases"},
    		success: function(response) {
    			console.log(response);
    			//insertOptions(response);
