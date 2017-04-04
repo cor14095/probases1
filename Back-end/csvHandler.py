@@ -271,6 +271,7 @@ def insertRecord(insertInfo):
 	#Write hash back to file
 	tableHashFile = open('./'+currentDatabase+'/'+insertInfo['tableName']+'.hash', 'w')
 	json.dump(tableHash, tableHashFile)
+
 	resultingCSV = resultingCSV[:-1]
 
 	
@@ -902,7 +903,7 @@ def delete(deleteInfo):
 
 	#If its all clear proceed to delete rows
 
-	
+
 	#Delete from table data
 	#Open table file
 	tableFile = open(r'./'+currentDatabase+'/'+deleteInfo['from'][0]+'.json', 'r')
@@ -935,11 +936,152 @@ def delete(deleteInfo):
 	
 	print("Succesfully deleted "+str(len(indexesToDelete))+" rows.")
 	
+'''
+updateInfoExample = {
+	'tableName':'table1',
+	'columnsToUpdate':{
+		'column1':'newValue1',
+		'column2':'newValue2'
+	},
+	'where':{
+		'operation':'OR',
+		'firstWhere':{
+			'operation':'NULL',
+			'firstWhere':{
+				'operation':'>',
+				'constraintColumn':'column2',
+				'compareTo':20
+			},
+			'secondWhere':{}
+		},
+		'secondWhere':{
+			'operation':'NULL',
+			'firstWhere':{
+				'operation':'<',
+				'constraintColumn':'column2',
+				'compareTo':10
+			},
+			'secondWhere':{}
+		}
+	}
+}
+'''
+def update(updateInfo):
+	#Open metadata file
+	metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+	metadata = json.load(metadataFile)
+
+	#Check if newValue can be casted to the type of the column it wants to set
+	for columnToUpdate, newValue in updateInfo['columnsToUpdate'].items():
+		for column in  metadata['tables'][updateInfo['tableName']]['columns']:
+			if column['columnName'] == columnToUpdate:
+				desiredType = column['type']
+		try:
+			if(desiredType == 'int'):
+				int(newValue)
+			elif(desiredType == 'float'):
+				float(newValue)
+			elif(desiredType == 'date'):
+				dateExpresion = re.compile('^\d\d-\d\d-\d\d\d\d$')
+				if not dateExpresion.match(newValue):
+					print("Type Error. Couldnt cast "+str(newValue)+" to "+desiredType)
+					return False
+		except:
+			print("Type error. Couldnt cast "+str(newValue)+" to "+desiredType)
+			return False
 
 
+	#If table to update contains a foreign key, check if the newValue is already a primary key in the constraint table
+	for column in metadata['tables'][updateInfo['tableName']]['columns']:
+		if column['key'] == FOREIGN_KEY:
+			if column['columnName'] in updateInfo['columnsToUpdate']:
+				#Open constraint table hash
+				constraintTableFile = open(r'./'+currentDatabase+'/'+column['constraintTable']+'.hash', 'r')
+				constraintTable = json.load(constraintTableFile)
+				if updateInfo['columnsToUpdate'][column['columnName']] not in constraintTable[column['constraintColumn']]:
+					print("Error, trying to update "+column['columnName']+" to "+updateInfo['columnsToUpdate'][column['columnName']]+" which doesnt exists yet as a primary key in constraint column "+column['constraintColumn']+" in constraint table "+column['constraintTable'])
+					return False
 
+	#Check references to this table
+	referencedValues = {}
 
+	#Collect references to this table
+	for tableName, tableData in metadata['tables'].items():
+		for column in tableData['columns']:
+			if column['key'] == FOREIGN_KEY:
+				if column['constraintTable'] == updateInfo['tableName']:
+					#Load table hash to retrieve values in column
+					tableHashFile = open('./'+currentDatabase+'/'+tableName+'.hash', 'r')
+					tableHash = json.load(tableHashFile)
+					referencedValues[column['constraintColumn']] = tableHash[column['columnName']].keys()
 
+	#Perform WHERE, generate indexes to be updated in table
+	indexesToUpdate, rowsToUpdate = filterOverSingleTableWithIndexes(updateInfo['tableName'], updateInfo['where']['operation'], updateInfo['where']['firstWhere'], updateInfo['where']['secondWhere'])
+
+	#Check if we're attempting to update a referenced value in a row
+	for columnName, values in referencedValues.items():
+		if columnName in updateInfo['columnsToUpdate']:
+			print("Error, trying to update rows were values are being referenced to in another column")
+			return False
+
+	#If its all clear, proceed to update rows
+
+	#Open table file
+	tableFile = open(r'./'+currentDatabase+'/'+updateInfo['tableName']+'.json', 'r')
+	table = json.load(tableFile)
+
+	#Open table hash file
+	tableHashFile = open(r'./'+currentDatabase+'/'+updateInfo['tableName']+'.hash', 'r')
+	tableHash = json.load(tableHashFile)
+	# print("Indexes to update:")
+	# print(indexesToUpdate)
+	for indexToUpdate in indexesToUpdate:
+		rowSplitted = table[str(indexToUpdate)].split(",")
+		for columnToUpdate, newValue in updateInfo['columnsToUpdate'].items():
+			for i in range(len(metadata['tables'][updateInfo['tableName']]['columns'])):
+				if metadata['tables'][updateInfo['tableName']]['columns'][i]['columnName'] == columnToUpdate:
+					#Update info in hash
+					# print("Trying to retrieve hash from column: "+columnToUpdate+", value: "+str(rowSplitted[i]))
+					tempArray = tableHash[columnToUpdate][str(rowSplitted[i])]
+					tempArray.remove(indexToUpdate)
+					tableHash[columnToUpdate][str(rowSplitted[i])] = tempArray
+					if (tableHash[columnToUpdate][str(rowSplitted[i])] == None) or len(tableHash[columnToUpdate][str(rowSplitted[i])]) == 0:
+						# print("Removed all, proceeding to pop key "+str(rowSplitted[i]))
+						tableHash[columnToUpdate].pop(str(rowSplitted[i]))
+
+					if str(newValue) in tableHash[columnToUpdate]:
+						# print("IT IS:")
+						# print(tableHash[columnToUpdate])
+						# print(tableHash[columnToUpdate][str(newValue)])
+						# print("Trying to add "+str(indexToUpdate)+" to "+str(tableHash[columnToUpdate][str(newValue)])+" attached to key "+str(newValue))
+						tempArray = tableHash[columnToUpdate][str(newValue)]
+						# print("Temp array:")
+						# print(str(tempArray))
+						tempArray.append(indexToUpdate)
+						tableHash[columnToUpdate][str(newValue)] = tempArray
+						# print("Resulting append:")
+						# print(str(tableHash[columnToUpdate][str(newValue)]))
+					else:
+						# print("ITS NOT:")
+						# print(tableHash[columnToUpdate])
+						# print("Trying to add "+str(indexToUpdate)+" to key "+str(newValue))
+						tableHash[columnToUpdate][str(newValue)] = [indexToUpdate]
+
+					#Update value in data
+					rowSplitted[i] = newValue
+		rowSplitted = map(str, rowSplitted)
+		rowJoined = ','.join(rowSplitted)
+		table[indexToUpdate] = rowJoined
+
+	#Write back table file
+	tableFile = open(r'./'+currentDatabase+'/'+updateInfo['tableName']+'.json', 'w')
+	json.dump(table, tableFile)
+
+	#Write back hash file
+	tableHashFile = open(r'./'+currentDatabase+'/'+updateInfo['tableName']+'.hash', 'w')
+	json.dump(tableHash, tableHashFile)
+
+	print("Succesfully updated "+str(len(indexesToUpdate))+" rows.")
 
 
 
@@ -986,12 +1128,18 @@ createTable(tableSchemaExample)
 
 print("Inserting into table 2")
 insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
+print("Inserting into table 2")
+insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
 
 print("Inserting into table 2")
 insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['24-24-2424', 'Alejandro Cortes']})
 
 print("Inserting into table 1")
 insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[12, '12-12-1212']})
+print("Inserting into table 1")
+insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[15, '12-12-1212']})
+print("Inserting into table 1")
+insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[19, '12-12-1212']})
 
 # print("Inserting into table 1")
 # insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[24, '12-12-1212']})
@@ -999,9 +1147,9 @@ insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':
 # print("Inserting into table 1")
 # insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[36, '12-12-1212']})
 
-for i in range(500):
-	# print("Inserting into table 1: "+str(i))
-	insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[random.randint(0,1000), '12-12-1212']})
+for i in range(150):
+	print("Inserting into table 1: "+str(i))
+	insertRecord({'tableName': 'table1', 'columns':['column2', 'column1'], 'values':[100, '12-12-1212']})
 
 
 '''
@@ -1086,7 +1234,7 @@ selectInfo = {
 
 print(select(selectInfo))
 '''
-
+'''
 deleteInfoExample = {
 	'from':['table1'],
 	'where':{
@@ -1113,7 +1261,37 @@ deleteInfoExample = {
 }
 
 delete(deleteInfoExample)
+'''
+
+updateInfoExample = {
+	'tableName':'table1',
+	'columnsToUpdate':{
+		'column1':'99-99-9999',
+		'column2':'lele'
+	},
+	'where':{
+		'operation':'AND',
+		'firstWhere':{
+			'operation':'NULL',
+			'firstWhere':{
+				'operation':'=',
+				'constraintColumn':'column3',
+				'compareTo':'12-12-1212'
+			},
+			'secondWhere':{}
+		},
+		'secondWhere':{
+			'operation':'NULL',
+			'firstWhere':{
+				'operation':'=',
+				'constraintColumn':'column3',
+				'compareTo':'12-12-1212'
+			},
+			'secondWhere':{}
+		}
+	}
+}
+
+update(updateInfoExample)
 
 # print(showDatabases())
-
-# deleteRows({'tableName':'table1', 'indexes':range(0,2999,2)})
