@@ -11,7 +11,7 @@ from antlr4.error.ErrorListener import ErrorListener
 # -> http://stackoverflow.com/a/32228598/4808919
 class ParserErrorListener( ErrorListener ):
 
-    logging.basicConfig(level=logging.DEBUG, filename='output/parserErrors.log')
+    logging.basicConfig(level=logging.DEBUG, filename='..\web\static\parserErrors.log')
     sys.tracebacklimit = 0
 
     def __init__(self):

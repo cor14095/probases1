@@ -28,7 +28,7 @@ def main(argv):
 
 # MAIN PROGRAM CODE:
 
-file = open("output/parserErrors.log", "w")
+file = open("..\web\static\parserErrors.log", "w")
 
 if __name__ == '__main__':
     main(sys.argv)
