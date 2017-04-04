@@ -18,14 +18,13 @@ function showDb(){
 		url: "/showDb",
 		data: {'datas':"show databases"},
    		success: function(response) {
-   			console.log(response);
-   			//insertOptions(response);
+   			insertOptions();
    		}
 	});
 }
 
-function insertOptions(response){
-	var response = "../static/data.csv";
+function insertOptions(){
+	var response = "../static/test/data.csv";
 	var select = jQuery("#file");
 	d3.csv(response, function(data) {
 		var dataValues = d3.values(data)[0];

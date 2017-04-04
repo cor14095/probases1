@@ -1,1 +1,1 @@
-CREATE DATABASE DatabaseName;
+show databases

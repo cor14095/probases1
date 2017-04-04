@@ -1,7 +1,9 @@
 from flask import Flask, request,render_template
 import sys
-sys.path.append("C:/Users/Freddie/Documents/Desktop/dbTest/Front-end/antlr")
-#import runSQL
+#sys.path.append("C:/Users/Freddie/Documents/Desktop/dbTest/Front-end/antlr")
+sys.path.append("../antlr")
+import jamon
+
 app = Flask(__name__)
 
 currentDB = ""
@@ -13,9 +15,10 @@ def hello():
 @app.route("/showDb", methods=['GET', 'POST'])
 def showOptions():
 	data = str(request.args.get('datas'))
-	with open("C:/Users/Freddie/Documents/Desktop/dbTest/Front-end/antlr/input/input.sql","w") as text_file:
+	with open("../antlr/input/input.sql","w") as text_file:
 			text_file.write(data)
-	return main(data)
+	jamon.test("../antlr/input/input.sql")
+	return "s"
 	
 
 @app.route("/createDb", methods=['GET', 'POST'])
@@ -30,7 +33,7 @@ def viewDb():
 	querys = request.args.get('querys')
 
 	if(querys):
-		with open("C:/Users/Freddie/Documents/Desktop/dbTest/Front-end/antlr/input/input.sql","w") as text_file:
+		with open("../antlr/input/input.sql","w") as text_file:
 			text_file.write(querys)
 		if('use ' in querys.lower()):
 			currentDB = querys[querys.index("use ") + len("use "):]
@@ -40,7 +43,7 @@ def viewDb():
 	elif(loadDb):
 		currentDB = loadDb
 	elif(newDB):
-		with open("C:/Users/Freddie/Documents/Desktop/dbTest/Front-end/antlr/input/input.sql","w") as text_file:
+		with open("../antlr/input/input.sql","w") as text_file:
 			text_file.write(newDB)
 		currentDB = newDB.rsplit(None,1)[-1]
 		if(currentDB.endswith(';')):

@@ -15,7 +15,7 @@ class SQLGramaticaPrintListener(SQLGramaticaListener):
 # Main function definition
 def runSQL(path):
     # Inputs and file creations.
-    file = open("static/parserErrors.log", "w")
+    file = open("..\web\static\parserErrors.log", "w")
     input = FileStream(path)
 
     # Compiling code.
