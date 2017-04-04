@@ -10,8 +10,8 @@ from antlr4.error.ErrorListener import ErrorListener
 # Base code from:
 # -> http://stackoverflow.com/a/32228598/4808919
 class ParserErrorListener( ErrorListener ):
-
-    logging.basicConfig(level=logging.DEBUG, filename='..\web\static\parserErrors.log')
+    # '..\web\static\parserErrors.log'
+    logging.basicConfig(level=logging.DEBUG, filename='static/parserErrors.log')
     sys.tracebacklimit = 0
 
     def __init__(self):
