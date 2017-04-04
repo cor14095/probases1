@@ -314,7 +314,6 @@ def insertRecord(insertInfo):
 	# print('Insert successful.')
 	return True
 
-
 def deleteIndexes(indexesToDelete, inputJson):
 	for indexToDelete in indexesToDelete:
 		print("\nDeleting index: "+str(indexToDelete))
@@ -517,7 +516,6 @@ def filterOverCartesianProduct(tableSchema, tableData, operation, firstWhere, se
 
 		return firstWhereResults
 
-
 def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
 	if(operation == "NULL"):
 		#Check type compatibility
@@ -640,6 +638,129 @@ def filterOverSingleTable(tableName, operation, firstWhere, secondWhere):
 
 		return firstWhereResults
 
+def filterOverSingleTableWithIndexes(tableName, operation, firstWhere, secondWhere):
+	if(operation == "NULL"):
+		#Check type compatibility
+		metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+		metadata = json.load(metadataFile)
+
+		for column in metadata['tables'][tableName]['columns']:
+			# print("Comparing: "+column['columnName']+" with "+firstWhere['constraintColumn'])
+			if column['columnName'] == firstWhere['constraintColumn']:
+				desiredType = column['type']
+
+		compareTo = firstWhere['compareTo']
+
+		try:
+			if((desiredType == 'string') or (desiredType == 'date')):
+				compareTo = str(compareTo)
+			elif(desiredType == 'int'):
+				compareTo = int(compareTo)
+			elif(desiredType == 'float'):
+				compareTo = float(compareTo)
+			# print("Cast complete")
+		except:
+			print("Error, "+str(compareTo)+" couldnt be casted to the type of: "+firstWhere['constraintColumn']+" ("+desiredType+")")
+			return False
+		
+		#Open table hash file
+		tableHashFile = open(r'./'+currentDatabase+'/'+tableName+'.hash', 'r')
+		tableHash = json.load(tableHashFile)
+
+		#Get hash for specific column
+		columnHash = tableHash[firstWhere['constraintColumn']]
+
+		#Get keys of column
+		columnKeys = columnHash.keys()
+		# print("Column keys PRECAST: ")
+		# print(columnKeys)
+
+		#Cast keys to respective type
+		if(desiredType == 'int'):
+			columnKeys = map(int, columnKeys)
+		elif(desiredType == 'float'):
+			columnKeys = map(float, columnKeys)
+
+		# print("Column keys POSTCAST: ")
+		# print(columnKeys)
+
+		# print("compareTo: "+str(compareTo)+str(type(compareTo)))
+
+		#Get matching keys
+		matchingKeys = []
+		if(firstWhere['operation'] == '='):
+			for key in columnKeys:
+				if key == compareTo:
+					matchingKeys.append(key)
+		elif(firstWhere['operation'] == '<'):
+			for key in columnKeys:
+				if key < compareTo:
+					matchingKeys.append(key)
+		elif(firstWhere['operation'] == '<='):
+			for key in columnKeys:
+				if key <= compareTo:
+					matchingKeys.append(key)
+		elif(firstWhere['operation'] == '>'):
+			for key in columnKeys:
+				if key > compareTo:
+					matchingKeys.append(key)
+		elif(firstWhere['operation'] == '>='):
+			for key in columnKeys:
+				if key >= compareTo:
+					matchingKeys.append(key)
+		elif(firstWhere['operation'] == 'not'):
+			for key in columnKeys:
+				if key != compareTo:
+					matchingKeys.append(key)
+
+		#Get row indexes
+		rowIndexes = []
+		for key in matchingKeys:
+			rowIndexes = list(set(rowIndexes) | set(columnHash[str(key)]))
+		# print("Row indexes")
+		# print(rowIndexes)
+
+		#Open table data file
+		tableFile = open(r'./'+currentDatabase+'/'+tableName+'.json', 'r')
+		table = json.load(tableFile)
+
+		#Generate resulting set of rows
+		resultData = []
+		for index in rowIndexes:
+			# print(table[str(key)])
+			resultData.append(table[str(index)])
+		# print(resultData)
+		resultData = map((lambda x : x.split(",")), resultData)
+		# print(resultData)
+
+		#Return indexes and data
+		return rowIndexes, resultData
+
+	elif(operation == "AND"):
+		#Filter childs
+		firstWhereResults = filterOverSingleTable(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
+		secondWhereResults = filterOverSingleTable(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+
+		#AND results of childs
+		resultData = []
+
+		for result in firstWhereResults:
+			if result in secondWhereResults:
+				resultData.append(result)
+
+		return resultData
+
+	elif(operation == "OR"):
+		#Filter childs
+		firstWhereResults = filterOverSingleTable(tableName, firstWhere['operation'], firstWhere['firstWhere'], firstWhere['secondWhere'])
+		secondWhereResults = filterOverSingleTable(tableName, secondWhere['operation'], secondWhere['firstWhere'], secondWhere['secondWhere'])
+
+		#OR results of childs
+		for result in secondWhereResults:
+			if result not in firstWhereResults:
+				firstWhereResults.append(result)
+
+		return firstWhereResults
 
 def select(selectInfo):
 	#Check if cartesian product is needed
@@ -694,7 +815,60 @@ def select(selectInfo):
 
 		return finalResult
 
-		print(finalResult)
+deleteInfoExample = {
+	'from':['table1'],
+	'where':{
+		'operation':'OR',
+		'firstWhere':{
+			'operation':'NULL',
+			'firstWhere':{
+				'operation':'=',
+				'constraintColumn':'column2',
+				'compareTo':666
+			},
+			'secondWhere':{}
+		},
+		'secondWhere':{
+			'operation':'AND',
+			'firstWhere':{
+				'operation':'NULL',
+				'firstWhere':{
+					'operation':'>',
+					'constraintColumn':'column2',
+					'compareTo':10
+				},
+				'secondWhere':{}
+			},
+			'secondWhere':{
+				'operation':'NULL',
+				'firstWhere':{
+					'operation':'<',
+					'constraintColumn':'column2',
+					'compareTo':20
+				},
+				'secondWhere':{}
+			}
+		}
+	}
+}
+
+def delete(deleteInfo):
+	#Open metadata file
+	metadataFile = open('./'+currentDatabase+'/'+currentDatabase+'Metadata.json', 'r')
+	metadata = json.load(metadataFile)
+
+	#Check references to this table
+	tablesReferencingThis = []
+
+	#Collect references to this table
+	for tableName, tableData in metadata['tables']:
+		if 'constraintTable' in tableData:
+			if tableData['constraintTable'] == deleteInfo['from'][0]:
+				tablesReferencingThis.append(tableName)
+
+	#Perform WHERE, generate indexes to be deleted in table
+	indexesToDelete, rowsToDelete = filterOverSingleTableWithIndexes(deleteInfo['from'][0], deleteInfo['where']['operation'], deleteInfo['where']['firstWhere'], deleteInfo['where']['secondWhere'])
+
 
 
 
