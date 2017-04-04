@@ -9,9 +9,10 @@ done flask global var current database
 //CHECK if CURRENTDB variable is being sent (or set as attribute) to Chan
 
 //home.js function showDb should wait for a response that's a filepath and call insertOptions
-//viewDb.js check file name and path
+done viewDb.js check file name and path
 //html add home button and anchor in testing.py
-//rename testing.py
+done rename testing.py
 //testing.py check runSQL import
 //testing.py check showOptions method
 //testing.py check viewDB
+//check css

@@ -1,7 +1,7 @@
 from flask import Flask, request,render_template
 import sys
 sys.path.append("C:/Users/Freddie/Documents/Desktop/dbTest/Front-end/antlr")
-import runSQL
+#import runSQL
 app = Flask(__name__)
 
 currentDB = ""
@@ -15,7 +15,7 @@ def showOptions():
 	data = str(request.args.get('datas'))
 	with open("C:/Users/Freddie/Documents/Desktop/dbTest/Front-end/antlr/input/input.sql","w") as text_file:
 			text_file.write(data)
-	return hola(data)
+	return main(data)
 	
 
 @app.route("/createDb", methods=['GET', 'POST'])

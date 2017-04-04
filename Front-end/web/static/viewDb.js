@@ -1,5 +1,5 @@
 jQuery(document).ready(function(){
-	var path = "../../../antlr/output/data.csv";
+	//var path = "../../antlr/output/data.csv";
 	//the following is the wrong way
 	var path = "../static/data.csv"
 
@@ -7,6 +7,7 @@ jQuery(document).ready(function(){
 });
 
 function csv2Table(path){
+	console.log(path);
 	d3.text(path,function(data){
 		console.log(data)
 		var parsedCSV = d3.csvParseRows(data);
