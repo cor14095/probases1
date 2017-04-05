@@ -1078,17 +1078,19 @@ def update(updateInfo, currentDatabase):
 createDatabase('database1')
 createDatabase('databaseCHANGE')
 
-print(changeDatabaseName('database1', 'databaseCHANGE'))
+# print(changeDatabaseName('database1', 'databaseCHANGE'))
 
-# useDatabase('database1')
+useDatabase('database1')
 
 # print(showTables())
 
-# tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column3', 'key':2, 'type':'date'},{'columnName':'column4', 'key':0, 'type':'string'}]}
-# createTable(tableSchemaExample)
+tableSchemaExample = {'tableName':'table2', 'columns':[{'columnName':'column3', 'key':2, 'type':'date'},{'columnName':'column4', 'key':0, 'type':'string'}]}
+createTable(tableSchemaExample, currentDatabase)
 
-# tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column3', 'type':'date'},{'columnName':'column2', 'key':0, 'type':'int'}]}
-# createTable(tableSchemaExample)
+tableSchemaExample = {'tableName':'table1', 'columns':[{'columnName':'column1', 'key':1, 'constraintTable':'table2', 'constraintColumn':'column3', 'type':'date'},{'columnName':'column2', 'key':0, 'type':'int'}]}
+createTable(tableSchemaExample, currentDatabase)
+
+print(showTables(currentDatabase))
 
 # print("Inserting into table 2")
 # insertRecord({'tableName': 'table2', 'columns':['column3', 'column4'], 'values':['12-12-1212', 'Bryan Chan']})
