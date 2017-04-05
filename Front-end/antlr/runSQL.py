@@ -2,6 +2,7 @@ import sys
 sys.path.append('../../Back-end')
 import logging
 import csvHandler
+#import numpy as np
 
 from antlr4 import *
 from SQLGramaticaLexer import SQLGramaticaLexer
@@ -53,6 +54,8 @@ class SQLGramaticaPrintListener(SQLGramaticaListener):
                 print qType
                 # Create a last outout message
                 lastMsg = ""
+                # The last matrix to generate a CSV
+                lastCSV = []
                 # Check what to do:
                 if (qType.upper() == "CREATE"):
                     # CREATE comand
@@ -60,13 +63,31 @@ class SQLGramaticaPrintListener(SQLGramaticaListener):
                     createJson["tableName"] = ctxChild.getChild(2).getText()
                     # I need to know what is pk and fk.
                     # Find pks.
+                    pks = ""
+                    fks = ""
                     cCount = 0
-                    while (ctxChild.getChild(cCount).getText != "CONSTRAINT"):
+                    while (ctxChild.getChild(cCount).getText() != "CONSTRAINT"):
                         cCount += 1
                     # Now pkCount is at the first CONSTRAINT.
-                    while (ctxChild.getChild(pkCount).getText() != ")"):
-                        
-                        cCount += 2
+                    while (ctxChild.getChild(cCount).getText() != ")"):
+                        thisCon = ctxChild.getChild(cCount + 1).getChild(0)
+                        print ctxChild.getChild(cCount).getText()
+                        if (thisCon.getChild(1).getText() == "PRIMARY"):
+                            # This is a pk.
+                            for j in xrange(4,thisCon.getChildCount() - 1):
+                                pks += thisCon.getChild(j).getText() + ","
+                        elif (thisCon.getChild(1).getText() == "FOREIGN"):
+                            # This is a fk.
+                            for j in xrange(4,thisCon.getChildCount() - 1):
+                                fks += thisCon.getChild(j).getText() + ","
+                        else:
+                            # This is a Check.
+                            print (thisCon.getText())
+                        cCount += 3
+                        print cCount, ctxChild.getChildCount()
+                        if cCount >= ctxChild.getChildCount() :
+                            cCount = ctxChild.getChildCount() - 1
+                    print pks, fks
                     colums = []
                     colCount = 4
                     while (ctxChild.getChild(colCount).getText != "CONSTRAINT"):
@@ -102,7 +123,7 @@ class SQLGramaticaPrintListener(SQLGramaticaListener):
                     addOutput(msg)
                 elif (qType.upper() == "SHOW"):
                     # SHOW comand
-                    msg = csvHandler.showDatabases()
+                    msg = str(csvHandler.showDatabases())
                     addOutput(msg)
                 elif (qType.upper() == "USE"):
                     # USE comand
@@ -137,4 +158,5 @@ def runSQL(path, DBName):
 
     file.close()
 
+    print getOutput()
     return getOutput()
