@@ -50,6 +50,14 @@ def showTables(currentDatabase):
 	metadata = json.load(input)
 	return metadata['tables'].keys()
 
+def changeDatabaseName(oldName, newName):
+	if newName in showDatabases():
+		return ("Error, a database with name "+newName+" already exists.")
+	else:
+		os.rename(r'./db/'+oldName, r'./db/'+newName)
+		os.rename(r'./db/'+newName+'/'+oldName+'Metadata.json', r'./db/'+newName+'/'+newName+'Metadata.json')
+		return ("Database: "+oldName+" changed name to: "+newName)
+
 NO_KEY = 0
 FOREIGN_KEY = 1
 PRIMARY_KEY = 2
@@ -1063,12 +1071,14 @@ def update(updateInfo, currentDatabase):
 
 
 
-
 # Testing area
 
 # dropDatabase('database1')
 
-# createDatabase('database1')
+createDatabase('database1')
+createDatabase('databaseCHANGE')
+
+print(changeDatabaseName('database1', 'databaseCHANGE'))
 
 # useDatabase('database1')
 
@@ -1145,10 +1155,6 @@ selectInfo = {
 
 print(select(selectInfo))
 '''
-selectInfo = {}
-selectInfo['select'] = ['column2', 'column1']
-selectInfo['where'] = {}
-selectInfo['operation'] = '<'
 
 selectInfo = {
 	'select':['column2','column1'],
@@ -1250,7 +1256,7 @@ updateInfoExample = {
 
 # update(updateInfoExample)
 
-print(showDatabases())
+# print(showDatabases())
 
 # for i in range(10000):
 # 	tableFile = open('./db/'+currentDatabase+'/'+'table1'+'.json', 'r')
